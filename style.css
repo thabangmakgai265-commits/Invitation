@@ -345,9 +345,9 @@ input:focus-visible {
 
     width: min(920px, 100%);
 
-    max-height: calc(100svh - 110px);
+    max-height: none;
 
-    overflow: hidden;
+    overflow: visible;
 
     text-align: center;
 
@@ -890,6 +890,7 @@ p {
     color: var(--gold-soft);
 
     font-size: 11px;
+
     font-weight: 700;
 
     letter-spacing: 0.12em;
@@ -975,7 +976,9 @@ p {
     flex-direction: column;
     align-items: center;
 
-    padding: 40px;
+    width: min(900px, 100%);
+
+    padding: 30px 35px;
 
     border: 1px solid var(--border-soft);
 
@@ -1000,6 +1003,7 @@ p {
     color: var(--muted-dark);
 
     font-size: 8px;
+
     font-weight: 700;
 
     letter-spacing: 0.22em;
@@ -1014,7 +1018,7 @@ p {
 
     place-items: center;
 
-    margin: 32px 0 22px;
+    margin: 20px 0 16px;
 
     color: var(--gold-soft);
 
@@ -1033,7 +1037,7 @@ p {
     width: 70px;
     height: 1px;
 
-    margin: 8px auto 25px;
+    margin: 6px auto 18px;
 
     background: var(--gold-dark);
 }
@@ -1042,7 +1046,7 @@ p {
 .formal-message {
     width: min(620px, 100%);
 
-    margin: 22px auto 30px;
+    margin: 16px auto 20px;
 
     color: var(--muted);
 
@@ -1055,9 +1059,9 @@ p {
 
     display: grid;
 
-    gap: 10px;
+    gap: 8px;
 
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 
@@ -1068,7 +1072,7 @@ p {
 
     gap: 18px;
 
-    padding: 12px 16px;
+    padding: 10px 14px;
 
     text-align: left;
 
@@ -1082,6 +1086,7 @@ p {
     color: var(--gold-soft);
 
     font-size: 10px;
+
     font-weight: 700;
 }
 
@@ -1090,6 +1095,17 @@ p {
     color: var(--silver);
 
     font-size: 12px;
+
+    line-height: 1.45;
+}
+
+
+#viewProgramme {
+    position: relative;
+
+    z-index: 20;
+
+    flex-shrink: 0;
 }
 
 
@@ -1146,6 +1162,7 @@ p {
     color: var(--gold-soft);
 
     font-size: 9px;
+
     font-weight: 700;
 }
 
@@ -1306,6 +1323,7 @@ p {
 
 .meter-fill {
     width: 0;
+
     height: 100%;
 
     background: var(--gold-light);
@@ -1441,6 +1459,7 @@ p {
     position: relative;
 
     width: min(720px, 100%);
+
     height: min(330px, 38svh);
 
     border: 1px solid var(--border-soft);
@@ -1523,6 +1542,7 @@ p {
     color: var(--muted-dark);
 
     font-size: 9px;
+
     font-weight: 700;
 
     letter-spacing: 0.18em;
@@ -1752,6 +1772,7 @@ p {
     font-family: "Courier New", monospace;
 
     font-size: 11px;
+
     font-weight: 700;
 
     letter-spacing: 0.15em;
@@ -1880,6 +1901,7 @@ p {
     color: var(--muted-dark);
 
     font-size: 8px;
+
     font-weight: 700;
 
     letter-spacing: 0.18em;
@@ -1890,6 +1912,7 @@ p {
     color: var(--silver);
 
     font-size: 10px;
+
     font-weight: 700;
 
     letter-spacing: 0.12em;
@@ -1924,6 +1947,7 @@ p {
 
 .final-brand-ring {
     position: absolute;
+
     inset: 0;
 
     border: 1px solid var(--border);
@@ -1936,6 +1960,7 @@ p {
 
 .final-brand-m {
     position: relative;
+
     z-index: 2;
 
     color: var(--gold-soft);
@@ -1972,6 +1997,7 @@ p {
 
 .celebration-layer {
     position: fixed;
+
     inset: 0;
 
     z-index: 100;
@@ -2007,6 +2033,7 @@ p {
 
     from {
         opacity: 0;
+
         transform:
             translate(0, 0)
             scale(0.4);
@@ -2018,6 +2045,7 @@ p {
 
     to {
         opacity: 0;
+
         transform:
             translate(var(--x), var(--y))
             scale(1);
@@ -2033,6 +2061,7 @@ p {
     position: fixed;
 
     left: 50%;
+
     bottom: 28px;
 
     z-index: 200;
@@ -2085,6 +2114,7 @@ p {
 
 #notificationMessage {
     font-size: 9px;
+
     font-weight: 700;
 
     letter-spacing: 0.16em;
@@ -2122,6 +2152,7 @@ p {
     cursor: pointer;
 
     font-size: 8px;
+
     font-weight: 700;
 
     letter-spacing: 0.15em;
@@ -2155,11 +2186,6 @@ p {
             65px
             20px
             30px;
-    }
-
-
-    .layer-content {
-        max-height: calc(100svh - 95px);
     }
 
 
@@ -2228,11 +2254,6 @@ p {
             60px
             15px
             25px;
-    }
-
-
-    .layer-content {
-        max-height: calc(100svh - 85px);
     }
 
 
@@ -2453,6 +2474,7 @@ p {
 
     .sound-control {
         top: 15px;
+
         right: 15px;
     }
 
@@ -2486,6 +2508,7 @@ p {
         scroll-behavior: auto !important;
 
         animation-duration: 0.01ms !important;
+
         animation-iteration-count: 1 !important;
 
         transition-duration: 0.01ms !important;
