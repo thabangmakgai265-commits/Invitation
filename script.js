@@ -1,207 +1,1972 @@
-let currentScreen = "welcome";
+/* =========================================================
+   MONARCHAUREX — PRIVATE INVITATION
+   LIHLE × MONARCHAUREX
+   MASTER JAVASCRIPT
+   ========================================================= */
 
-const screens = [
-    "welcome",
-    "question1",
-    "question2",
-    "question3",
-    "unlock",
-    "invitation"
-];
+/* =========================================================
+   01. GLOBAL STATE
+   ========================================================= */
 
-let currentStep = 0;
+const state = {
+    currentLayer: "layerArrival",
+
+    happiness: 42,
+
+    energyScore: 0,
+
+    vibeAnswered: false,
+
+    identityConfirmed: false,
+
+    invitationAccepted: false,
+
+    smileConfirmed: false,
+
+    finalApproved: false,
+
+    soundEnabled: false,
+
+    audioContext: null,
+
+    currentPanel: "panelIdea"
+};
 
 
-/* ============================= */
-/* SCREEN CONTROL */
-/* ============================= */
+/* =========================================================
+   02. ELEMENT HELPERS
+   ========================================================= */
 
-function showScreen(id) {
+const $ = (selector) => document.querySelector(selector);
 
-    document.querySelectorAll(".screen").forEach(screen => {
-        screen.classList.remove("active");
-    });
+const $$ = (selector) => document.querySelectorAll(selector);
 
-    document.getElementById(id).classList.add("active");
-
-    currentScreen = id;
-
-    updateProgress();
+function get(id) {
+    return document.getElementById(id);
 }
 
 
-/* ============================= */
-/* PROGRESS */
-/* ============================= */
+/* =========================================================
+   03. LAYER MAP
+   ========================================================= */
 
-function updateProgress() {
+const layerOrder = [
+    "layerArrival",
+    "layerIdentity",
+    "layerReveal",
+    "layerDiscovery",
+    "layerFormalInvitation",
+    "layerWait",
+    "layerHappiness",
+    "layerSmile",
+    "layerEnergy",
+    "layerImportantQuestion",
+    "layerFinalVerification",
+    "layerApproved",
+    "layerWelcome"
+];
 
-    const dots = document.querySelectorAll(".progress-dot");
 
-    let step = screens.indexOf(currentScreen);
+/* =========================================================
+   04. INITIAL SETUP
+   ========================================================= */
 
-    if (step >= 0) {
+document.addEventListener("DOMContentLoaded", () => {
 
-        dots.forEach((dot, index) => {
+    initializeInvitation();
 
-            dot.classList.toggle(
+});
+
+
+function initializeInvitation() {
+
+    setupLayers();
+
+    setupButtons();
+
+    setupDiscovery();
+
+    setupHappiness();
+
+    setupSmileChallenge();
+
+    setupEnergyGame();
+
+    setupVibeQuestion();
+
+    setupSound();
+
+    setupInitialVisuals();
+
+    updateProgress();
+
+}
+
+
+/* =========================================================
+   05. LAYER SYSTEM
+   ========================================================= */
+
+function setupLayers() {
+
+    $$(".layer").forEach(layer => {
+        layer.classList.remove(
+            "active",
+            "is-active",
+            "show"
+        );
+    });
+
+    const firstLayer = get(state.currentLayer);
+
+    if (firstLayer) {
+        firstLayer.classList.add("active");
+    }
+}
+
+
+function showLayer(layerId) {
+
+    if (!layerId) {
+        return;
+    }
+
+    const nextLayer = get(layerId);
+
+    if (!nextLayer) {
+        console.warn(
+            `MonarchAurex: Layer "${layerId}" was not found.`
+        );
+
+        return;
+    }
+
+    const currentLayer = get(state.currentLayer);
+
+    if (currentLayer && currentLayer !== nextLayer) {
+
+        currentLayer.classList.add("exit");
+
+        setTimeout(() => {
+
+            currentLayer.classList.remove(
                 "active",
-                index <= Math.min(step, 3)
+                "is-active",
+                "show",
+                "exit"
+            );
+
+            activateLayer(nextLayer);
+
+        }, 420);
+
+    } else {
+
+        activateLayer(nextLayer);
+
+    }
+
+}
+
+
+function activateLayer(layer) {
+
+    document
+        .querySelectorAll(".layer")
+        .forEach(item => {
+
+            item.classList.remove(
+                "active",
+                "is-active",
+                "show"
             );
 
         });
 
+    layer.classList.add("active");
+
+    state.currentLayer = layer.id;
+
+    updateProgress();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   06. PROGRESS
+   ========================================================= */
+
+function updateProgress() {
+
+    const progressBar = $(".progress-bar");
+
+    if (!progressBar) {
+        return;
     }
+
+    const index = layerOrder.indexOf(
+        state.currentLayer
+    );
+
+    if (index === -1) {
+        progressBar.style.width = "0%";
+        return;
+    }
+
+    const progress =
+        (index / (layerOrder.length - 1)) * 100;
+
+    progressBar.style.width =
+        `${Math.max(0, Math.min(progress, 100))}%`;
+
 }
 
 
-/* ============================= */
-/* START */
-/* ============================= */
+/* =========================================================
+   07. MAIN BUTTONS
+   ========================================================= */
 
-function startChallenge() {
+function setupButtons() {
 
-    showScreen("question1");
+    /* -----------------------------------------
+       ENTER INVITATION
+       ----------------------------------------- */
+
+    const enterInvitation =
+        get("enterInvitation");
+
+    if (enterInvitation) {
+
+        enterInvitation.addEventListener(
+            "click",
+            () => {
+
+                playClick();
+
+                showLayer("layerIdentity");
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       CONFIRM IDENTITY
+       ----------------------------------------- */
+
+    const confirmIdentity =
+        get("confirmIdentity");
+
+    if (confirmIdentity) {
+
+        confirmIdentity.addEventListener(
+            "click",
+            () => {
+
+                state.identityConfirmed = true;
+
+                playSuccess();
+
+                showNotification(
+                    "Identity confirmed."
+                );
+
+                setTimeout(() => {
+
+                    showLayer("layerReveal");
+
+                }, 700);
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       DISCOVER OPPORTUNITY
+       ----------------------------------------- */
+
+    const discoverOpportunity =
+        get("discoverOpportunity");
+
+    if (discoverOpportunity) {
+
+        discoverOpportunity.addEventListener(
+            "click",
+            () => {
+
+                playClick();
+
+                showLayer("layerDiscovery");
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       ACCEPT INVITATION
+       ----------------------------------------- */
+
+    const acceptInvitation =
+        get("acceptInvitation");
+
+    if (acceptInvitation) {
+
+        acceptInvitation.addEventListener(
+            "click",
+            () => {
+
+                state.invitationAccepted = true;
+
+                playClick();
+
+                showLayer("layerWait");
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       START FUN VERIFICATION
+       ----------------------------------------- */
+
+    const startFunVerification =
+        get("startFunVerification");
+
+    if (startFunVerification) {
+
+        startFunVerification.addEventListener(
+            "click",
+            () => {
+
+                playClick();
+
+                showLayer("layerHappiness");
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       HAPPINESS CONTINUE
+       ----------------------------------------- */
+
+    const happinessContinue =
+        get("happinessContinue");
+
+    if (happinessContinue) {
+
+        happinessContinue.addEventListener(
+            "click",
+            () => {
+
+                if (state.happiness < 70) {
+
+                    showNotification(
+                        "The system is still not convinced. Increase the happiness level first. 😭"
+                    );
+
+                    shakeElement(
+                        get("happinessSlider")
+                    );
+
+                    return;
+                }
+
+                playSuccess();
+
+                showLayer("layerSmile");
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       ENTER MONARCHAUREX
+       ----------------------------------------- */
+
+    const enterMonarchAurex =
+        get("enterMonarchAurex");
+
+    if (enterMonarchAurex) {
+
+        enterMonarchAurex.addEventListener(
+            "click",
+            () => {
+
+                playSuccess();
+
+                createCelebration();
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "https://monarchaurex.co.za/";
+
+                }, 850);
+
+            }
+        );
+
+    }
 
 }
 
 
-/* ============================= */
-/* QUESTION 1 */
-/* ============================= */
+/* =========================================================
+   08. DISCOVERY SYSTEM
+   ========================================================= */
 
-function answerQ1(type) {
+function setupDiscovery() {
 
-    const feedback = document.getElementById("feedback1");
+    const cards =
+        $$(".card-open");
 
-    if (type === "correct") {
+    cards.forEach(card => {
+
+        card.addEventListener(
+            "click",
+            () => {
+
+                const panelId =
+                    card.dataset.open;
+
+                if (!panelId) {
+                    return;
+                }
+
+                openDiscovery(panelId);
+
+            }
+        );
+
+    });
+
+
+    /* -----------------------------------------
+       CLOSE DISCOVERY
+       ----------------------------------------- */
+
+    const closeDiscovery =
+        get("closeDiscovery");
+
+    if (closeDiscovery) {
+
+        closeDiscovery.addEventListener(
+            "click",
+            closeDiscoveryModal
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       PANEL NEXT
+       ----------------------------------------- */
+
+    $$(".panel-next").forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const nextPanel =
+                    button.dataset.nextPanel;
+
+                if (nextPanel) {
+
+                    openDiscovery(nextPanel);
+
+                }
+
+            }
+        );
+
+    });
+
+
+    /* -----------------------------------------
+       FINISH DISCOVERY
+       ----------------------------------------- */
+
+    $$("[data-finish-discovery]").forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    closeDiscoveryModal();
+
+                    setTimeout(() => {
+
+                        showLayer(
+                            "layerFormalInvitation"
+                        );
+
+                    }, 350);
+
+                }
+            );
+
+        }
+    );
+
+
+    /* -----------------------------------------
+       ESCAPE KEY
+       ----------------------------------------- */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Escape") {
+
+                closeDiscoveryModal();
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------
+       BACKDROP CLICK
+       ----------------------------------------- */
+
+    const modal =
+        get("discoveryModal");
+
+    if (modal) {
+
+        modal.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === modal
+                ) {
+
+                    closeDiscoveryModal();
+
+                }
+
+            }
+        );
+
+    }
+
+}
+
+
+function openDiscovery(panelId) {
+
+    const modal =
+        get("discoveryModal");
+
+    if (!modal) {
+        return;
+    }
+
+    const targetPanel =
+        get(panelId);
+
+    if (!targetPanel) {
+        return;
+    }
+
+    $$(".discovery-panel").forEach(
+        panel => {
+
+            panel.classList.remove(
+                "active",
+                "show"
+            );
+
+        }
+    );
+
+    targetPanel.classList.add("active");
+
+    state.currentPanel = panelId;
+
+    modal.classList.add(
+        "active",
+        "show"
+    );
+
+    document.body.style.overflow =
+        "hidden";
+
+    playClick();
+
+}
+
+
+function closeDiscoveryModal() {
+
+    const modal =
+        get("discoveryModal");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove(
+        "active",
+        "show"
+    );
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================================
+   09. HAPPINESS VERIFICATION
+   ========================================================= */
+
+function setupHappiness() {
+
+    const slider =
+        get("happinessSlider");
+
+    if (!slider) {
+        return;
+    }
+
+    state.happiness =
+        Number(slider.value) || 42;
+
+    updateHappiness();
+
+    slider.addEventListener(
+        "input",
+        () => {
+
+            state.happiness =
+                Number(slider.value);
+
+            updateHappiness();
+
+        }
+    );
+
+}
+
+
+function updateHappiness() {
+
+    const value =
+        state.happiness;
+
+    const slider =
+        get("happinessSlider");
+
+    const display =
+        get("happinessValue");
+
+    const meter =
+        get("meterFill");
+
+    const feedback =
+        get("happinessFeedback");
+
+
+    if (slider) {
+
+        slider.value = value;
+
+    }
+
+
+    if (display) {
+
+        display.textContent =
+            `${value}%`;
+
+    }
+
+
+    if (meter) {
+
+        meter.style.width =
+            `${value}%`;
+
+    }
+
+
+    if (feedback) {
+
+        if (value < 45) {
+
+            feedback.textContent =
+                "Hmm... that is not exactly what we'd call enthusiasm. 😐";
+
+        } else if (value < 60) {
+
+            feedback.textContent =
+                "Okay... we're seeing signs of life.";
+
+        } else if (value < 70) {
+
+            feedback.textContent =
+                "Better. But the MonarchAurex system remains suspicious.";
+
+        } else if (value < 85) {
+
+            feedback.textContent =
+                "Hmm... better. We're getting somewhere.";
+
+        } else if (value < 95) {
+
+            feedback.textContent =
+                "Now THAT looks more convincing.";
+
+        } else {
+
+            feedback.textContent =
+                "Maximum happiness detected. We may proceed. 😭🔥";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   10. SMILE CHALLENGE
+   ========================================================= */
+
+function setupSmileChallenge() {
+
+    const smileButton =
+        get("smileButton");
+
+    if (!smileButton) {
+        return;
+    }
+
+    smileButton.addEventListener(
+        "click",
+        () => {
+
+            state.smileConfirmed = true;
+
+            playSuccess();
+
+            const feedback =
+                get("smileFeedback");
+
+            if (feedback) {
+
+                feedback.textContent =
+                    "Smile detected. ...probably. We'll trust you. 😭";
+
+            }
+
+            smileButton.textContent =
+                "SMILE VERIFIED ✓";
+
+            smileButton.disabled =
+                true;
+
+            smileButton.style.opacity =
+                "0.7";
+
+            setTimeout(() => {
+
+                showLayer("layerEnergy");
+
+            }, 1200);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   11. ENERGY GAME
+   ========================================================= */
+
+function setupEnergyGame() {
+
+    const emblem =
+        get("movingEmblem");
+
+    const arena =
+        get("energyArena");
+
+    if (!emblem || !arena) {
+        return;
+    }
+
+
+    /* -----------------------------------------
+       INITIAL POSITION
+       ----------------------------------------- */
+
+    moveEnergyEmblem();
+
+
+    /* -----------------------------------------
+       CLICK EVENT
+       ----------------------------------------- */
+
+    emblem.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+
+            energyHit();
+
+        }
+    );
+
+
+    /* -----------------------------------------
+       TOUCH SUPPORT
+       ----------------------------------------- */
+
+    emblem.addEventListener(
+        "touchstart",
+        event => {
+
+            event.preventDefault();
+
+            energyHit();
+
+        },
+        {
+            passive: false
+        }
+    );
+
+}
+
+
+function energyHit() {
+
+    if (state.energyScore >= 5) {
+        return;
+    }
+
+    state.energyScore++;
+
+    playClick();
+
+    updateEnergyScore();
+
+    moveEnergyEmblem();
+
+}
+
+
+function updateEnergyScore() {
+
+    const score =
+        get("energyScore");
+
+    const feedback =
+        get("energyFeedback");
+
+    const messages = [
+        "✦ Nice.",
+        "✦ Okayyy.",
+        "✦ You're getting serious.",
+        "✦ THERE WE GO.",
+        "✦ ENERGY CONFIRMED 🔥"
+    ];
+
+    if (score) {
+
+        score.textContent =
+            `${state.energyScore} / 5`;
+
+    }
+
+    if (feedback) {
 
         feedback.textContent =
-            "✓ Correct. We can continue.";
+            messages[
+                Math.max(
+                    0,
+                    state.energyScore - 1
+                )
+            ] || "";
+
+    }
+
+    if (state.energyScore >= 5) {
+
+        const emblem =
+            get("movingEmblem");
+
+        if (emblem) {
+
+            emblem.style.pointerEvents =
+                "none";
+
+            emblem.style.opacity =
+                "0";
+
+            emblem.style.transform =
+                "scale(1.4)";
+
+        }
 
         setTimeout(() => {
-            showScreen("question2");
-        }, 1000);
 
-    }
+            showLayer(
+                "layerImportantQuestion"
+            );
 
-    else if (type === "funny") {
-
-        feedback.textContent =
-            "😂 We respect the honesty... but no.";
-
-    }
-
-    else {
-
-        feedback.textContent =
-            "❌ Nice try. But HTML handles structure.";
+        }, 900);
 
     }
 
 }
 
 
-/* ============================= */
-/* QUESTION 2 */
-/* ============================= */
+function moveEnergyEmblem() {
 
-function answerQ2(type) {
+    const arena =
+        get("energyArena");
 
-    const feedback = document.getElementById("feedback2");
+    const emblem =
+        get("movingEmblem");
 
-    if (type === "correct") {
+    if (!arena || !emblem) {
+        return;
+    }
+
+    const arenaWidth =
+        arena.clientWidth;
+
+    const arenaHeight =
+        arena.clientHeight;
+
+    const emblemWidth =
+        emblem.offsetWidth || 64;
+
+    const emblemHeight =
+        emblem.offsetHeight || 64;
+
+    const padding = 35;
+
+    const maxX =
+        Math.max(
+            padding,
+            arenaWidth -
+            emblemWidth -
+            padding
+        );
+
+    const maxY =
+        Math.max(
+            padding,
+            arenaHeight -
+            emblemHeight -
+            padding
+        );
+
+    const x =
+        Math.random() *
+        (maxX - padding) +
+        padding;
+
+    const y =
+        Math.random() *
+        (maxY - padding) +
+        padding;
+
+    emblem.style.left =
+        `${x}px`;
+
+    emblem.style.top =
+        `${y}px`;
+
+}
+
+
+/* =========================================================
+   12. VIBE QUESTION
+   ========================================================= */
+
+function setupVibeQuestion() {
+
+    const options =
+        $$(".vibe-option");
+
+    if (!options.length) {
+        return;
+    }
+
+    options.forEach(option => {
+
+        option.addEventListener(
+            "click",
+            () => {
+
+                if (state.vibeAnswered) {
+                    return;
+                }
+
+                const answer =
+                    option.dataset.answer;
+
+                state.vibeAnswered =
+                    true;
+
+                options.forEach(item => {
+
+                    item.classList.remove(
+                        "selected"
+                    );
+
+                });
+
+                option.classList.add(
+                    "selected"
+                );
+
+                handleVibeAnswer(
+                    answer
+                );
+
+            }
+        );
+
+    });
+
+}
+
+
+function handleVibeAnswer(answer) {
+
+    const feedback =
+        get("vibeFeedback");
+
+    let message =
+        "";
+
+    switch (answer) {
+
+        case "A":
+
+            message =
+                "Good vibes accepted. But we expected a little more. 😌";
+
+            break;
+
+        case "B":
+
+            message =
+                "Energy detected. Respect. 🔥";
+
+            break;
+
+        case "C":
+
+            message =
+                "Honestly... snacks are always valid. 🍕";
+
+            break;
+
+        case "D":
+
+            message =
+                "CORRECT. Finally, someone understands the assignment. 😭🔥";
+
+            break;
+
+        default:
+
+            message =
+                "Interesting choice.";
+
+    }
+
+    if (feedback) {
 
         feedback.textContent =
-            "✓ Correct. Your access level is increasing.";
+            message;
+
+    }
+
+    playSuccess();
+
+    setTimeout(() => {
+
+        showLayer(
+            "layerFinalVerification"
+        );
+
+        runFinalVerification();
+
+    }, 1400);
+
+}
+
+
+/* =========================================================
+   13. FINAL VERIFICATION
+   ========================================================= */
+
+function runFinalVerification() {
+
+    const checks = [
+        {
+            id: "verifyIdentity",
+            delay: 400
+        },
+        {
+            id: "verifyInvitation",
+            delay: 900
+        },
+        {
+            id: "verifyEnergy",
+            delay: 1400
+        },
+        {
+            id: "verifyHappiness",
+            delay: 1900
+        },
+        {
+            id: "verifyVibes",
+            delay: 2400
+        },
+        {
+            id: "verifyCommitment",
+            delay: 2900
+        }
+    ];
+
+    checks.forEach(check => {
+
+        const element =
+            get(check.id);
+
+        if (!element) {
+            return;
+        }
+
+        element.style.opacity =
+            "0";
+
+        element.style.transform =
+            "translateX(-10px)";
 
         setTimeout(() => {
-            showScreen("question3");
-        }, 1000);
 
-    }
+            element.style.opacity =
+                "1";
 
-    else if (type === "funny") {
+            element.style.transform =
+                "translateX(0)";
 
-        feedback.textContent =
-            "😂 Surprisingly, that sometimes works.";
+            element.style.transition =
+                "all 0.4s ease";
 
-    }
+            playTerminalTick();
 
-    else {
+        }, check.delay);
 
-        feedback.textContent =
-            "❌ Let's keep Microsoft Word out of this one.";
+    });
 
+
+    setTimeout(() => {
+
+        const status =
+            get("verificationStatus");
+
+        if (status) {
+
+            status.textContent =
+                "STATUS: APPROVED";
+
+            status.style.color =
+                "var(--success)";
+
+        }
+
+        playSuccess();
+
+    }, 3500);
+
+
+    setTimeout(() => {
+
+        showLayer(
+            "layerApproved"
+        );
+
+    }, 4300);
+
+}
+
+
+/* =========================================================
+   14. APPROVAL SCREEN
+   ========================================================= */
+
+function setupApprovalScreen() {
+
+    const approvalLayer =
+        get("layerApproved");
+
+    if (!approvalLayer) {
+        return;
     }
 
 }
 
 
-/* ============================= */
-/* QUESTION 3 */
-/* ============================= */
+/* =========================================================
+   15. CELEBRATION
+   ========================================================= */
 
-function answerQ3(type) {
+function createCelebration() {
 
-    const feedback = document.getElementById("feedback3");
+    const container =
+        get("celebrationLayer");
 
-    if (type === "correct") {
+    if (!container) {
+        return;
+    }
 
-        feedback.textContent =
-            "✓ Excellent. You have passed the final check.";
+    container.innerHTML =
+        "";
 
+    const pieces =
+        90;
+
+    for (
+        let i = 0;
+        i < pieces;
+        i++
+    ) {
+
+        const piece =
+            document.createElement(
+                "span"
+            );
+
+        piece.className =
+            "confetti";
+
+        piece.style.left =
+            `${Math.random() * 100}%`;
+
+        piece.style.animationDelay =
+            `${Math.random() * 1.2}s`;
+
+        piece.style.animationDuration =
+            `${2.5 + Math.random() * 2.2}s`;
+
+        piece.style.width =
+            `${4 + Math.random() * 6}px`;
+
+        piece.style.height =
+            `${8 + Math.random() * 12}px`;
+
+        /*
+         * Random premium colours.
+         * Kept inside JS so the CSS remains clean.
+         */
+
+        const colours = [
+            "#C7A45B",
+            "#D7BD82",
+            "#F5F5F5",
+            "#98A4B8",
+            "#76531F"
+        ];
+
+        piece.style.background =
+            colours[
+                Math.floor(
+                    Math.random() *
+                    colours.length
+                )
+            ];
+
+        piece.style.transform =
+            `rotate(${Math.random() * 360}deg)`;
+
+        container.appendChild(
+            piece
+        );
+
+    }
+
+    setTimeout(() => {
+
+        container.innerHTML =
+            "";
+
+    }, 6500);
+
+}
+
+
+/* =========================================================
+   16. NOTIFICATIONS
+   ========================================================= */
+
+let notificationTimeout = null;
+
+function showNotification(message) {
+
+    const notification =
+        get("systemNotification");
+
+    if (!notification) {
+        return;
+    }
+
+    notification.textContent =
+        message;
+
+    notification.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        notificationTimeout
+    );
+
+    notificationTimeout =
         setTimeout(() => {
-            showScreen("unlock");
-        }, 1200);
+
+            notification.classList.remove(
+                "show"
+            );
+
+        }, 3500);
+
+}
+
+
+/* =========================================================
+   17. SHAKE EFFECT
+   ========================================================= */
+
+function shakeElement(element) {
+
+    if (!element) {
+        return;
+    }
+
+    element.animate(
+        [
+            {
+                transform: "translateX(0)"
+            },
+            {
+                transform: "translateX(-8px)"
+            },
+            {
+                transform: "translateX(8px)"
+            },
+            {
+                transform: "translateX(-6px)"
+            },
+            {
+                transform: "translateX(6px)"
+            },
+            {
+                transform: "translateX(0)"
+            }
+        ],
+        {
+            duration: 420,
+            easing: "ease-out"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   18. SOUND SYSTEM
+   ========================================================= */
+
+function setupSound() {
+
+    const soundControl =
+        get("soundControl");
+
+    if (!soundControl) {
+        return;
+    }
+
+    soundControl.addEventListener(
+        "click",
+        () => {
+
+            state.soundEnabled =
+                !state.soundEnabled;
+
+            updateSoundButton();
+
+            if (state.soundEnabled) {
+
+                initializeAudio();
+
+                playSuccess();
+
+            }
+
+        }
+    );
+
+    updateSoundButton();
+
+}
+
+
+function updateSoundButton() {
+
+    const button =
+        get("soundControl");
+
+    if (!button) {
+        return;
+    }
+
+    if (state.soundEnabled) {
+
+        button.textContent =
+            "🔊";
+
+        button.setAttribute(
+            "aria-label",
+            "Mute sound"
+        );
+
+    } else {
+
+        button.textContent =
+            "🔇";
+
+        button.setAttribute(
+            "aria-label",
+            "Enable sound"
+        );
 
     }
 
-    else if (type === "funny") {
+}
 
-        feedback.textContent =
-            "😂 We admire the confidence. But planning comes first.";
+
+function initializeAudio() {
+
+    if (state.audioContext) {
+        return;
+    }
+
+    try {
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if (!AudioContext) {
+            return;
+        }
+
+        state.audioContext =
+            new AudioContext();
+
+    } catch (error) {
+
+        console.warn(
+            "Audio could not be initialized.",
+            error
+        );
 
     }
 
-    else {
+}
 
-        feedback.textContent =
-            "❌ Coding before planning? Dangerous territory.";
+
+function playTone(
+    frequency = 440,
+    duration = 0.08,
+    type = "sine",
+    volume = 0.025
+) {
+
+    if (!state.soundEnabled) {
+        return;
+    }
+
+    initializeAudio();
+
+    if (!state.audioContext) {
+        return;
+    }
+
+    const context =
+        state.audioContext;
+
+    if (
+        context.state ===
+        "suspended"
+    ) {
+
+        context.resume();
 
     }
 
+    const oscillator =
+        context.createOscillator();
+
+    const gain =
+        context.createGain();
+
+    oscillator.type =
+        type;
+
+    oscillator.frequency.value =
+        frequency;
+
+    gain.gain.setValueAtTime(
+        0,
+        context.currentTime
+    );
+
+    gain.gain.linearRampToValueAtTime(
+        volume,
+        context.currentTime + 0.01
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        context.currentTime + duration
+    );
+
+    oscillator.connect(gain);
+
+    gain.connect(
+        context.destination
+    );
+
+    oscillator.start();
+
+    oscillator.stop(
+        context.currentTime +
+        duration
+    );
+
 }
 
 
-/* ============================= */
-/* OPEN INVITATION */
-/* ============================= */
+/* =========================================================
+   19. SOUND EVENTS
+   ========================================================= */
 
-function openInvitation() {
+function playClick() {
 
-    showScreen("invitation");
-
-}
-
-
-/* ============================= */
-/* RSVP */
-/* ============================= */
-
-function showRSVP() {
-
-    document
-        .getElementById("rsvpModal")
-        .classList.add("show");
+    playTone(
+        520,
+        0.06,
+        "sine",
+        0.02
+    );
 
 }
 
 
-function closeRSVP() {
+function playSuccess() {
 
-    document
-        .getElementById("rsvpModal")
-        .classList.remove("show");
+    if (!state.soundEnabled) {
+        return;
+    }
+
+    playTone(
+        523.25,
+        0.09,
+        "sine",
+        0.025
+    );
+
+    setTimeout(() => {
+
+        playTone(
+            659.25,
+            0.11,
+            "sine",
+            0.025
+        );
+
+    }, 80);
+
+    setTimeout(() => {
+
+        playTone(
+            783.99,
+            0.16,
+            "sine",
+            0.025
+        );
+
+    }, 160);
 
 }
+
+
+function playTerminalTick() {
+
+    playTone(
+        760,
+        0.035,
+        "square",
+        0.012
+    );
+
+}
+
+
+/* =========================================================
+   20. INITIAL VISUALS
+   ========================================================= */
+
+function setupInitialVisuals() {
+
+    const arrival =
+        get("layerArrival");
+
+    if (arrival) {
+
+        const content =
+            arrival.querySelector(
+                ".layer-content"
+            );
+
+        if (content) {
+
+            content.classList.add(
+                "fade-in"
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Give buttons a small interaction
+     * without changing their actual logic.
+     */
+
+    $$("button").forEach(button => {
+
+        button.addEventListener(
+            "pointerdown",
+            () => {
+
+                if (
+                    button.disabled
+                ) {
+                    return;
+                }
+
+                button.style.transform =
+                    "scale(0.98)";
+
+            }
+        );
+
+        button.addEventListener(
+            "pointerup",
+            () => {
+
+                button.style.transform =
+                    "";
+
+            }
+        );
+
+        button.addEventListener(
+            "pointerleave",
+            () => {
+
+                button.style.transform =
+                    "";
+
+            }
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   21. RESIZE HANDLING
+   ========================================================= */
+
+let resizeTimeout = null;
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        clearTimeout(
+            resizeTimeout
+        );
+
+        resizeTimeout =
+            setTimeout(() => {
+
+                if (
+                    state.currentLayer ===
+                    "layerEnergy"
+                ) {
+
+                    moveEnergyEmblem();
+
+                }
+
+            }, 150);
+
+    }
+);
+
+
+/* =========================================================
+   22. KEYBOARD ACCESS
+   ========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        /*
+         * ENTER can activate focused buttons.
+         */
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            const active =
+                document.activeElement;
+
+            if (
+                active &&
+                active.tagName ===
+                "BUTTON"
+            ) {
+
+                active.click();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   23. PREVENT ACCIDENTAL DOUBLE SUBMISSION
+   ========================================================= */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const button =
+            event.target.closest(
+                "button"
+            );
+
+        if (!button) {
+            return;
+        }
+
+        if (
+            button.dataset.locked ===
+            "true"
+        ) {
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   24. APPROVAL SAFETY
+   ========================================================= */
+
+function verifyAllRequirements() {
+
+    return (
+        state.identityConfirmed &&
+        state.invitationAccepted &&
+        state.happiness >= 70 &&
+        state.smileConfirmed &&
+        state.energyScore >= 5 &&
+        state.vibeAnswered
+    );
+
+}
+
+
+/* =========================================================
+   25. FINAL APPROVAL GUARD
+   ========================================================= */
+
+const originalRunFinalVerification =
+    runFinalVerification;
+
+
+/*
+ * We deliberately keep the verification
+ * sequence behind a complete requirement check.
+ */
+
+function secureFinalVerification() {
+
+    if (
+        !verifyAllRequirements()
+    ) {
+
+        showNotification(
+            "Verification incomplete."
+        );
+
+        return;
+
+    }
+
+    originalRunFinalVerification();
+
+}
+
+
+/* =========================================================
+   26. SPECIAL MOBILE TOUCH BEHAVIOUR
+   ========================================================= */
+
+document.addEventListener(
+    "touchmove",
+    event => {
+
+        /*
+         * Do not interfere with normal
+         * page scrolling.
+         */
+
+        if (
+            state.currentLayer !==
+            "layerEnergy"
+        ) {
+            return;
+        }
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* =========================================================
+   27. PAGE VISIBILITY
+   ========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.hidden &&
+            state.audioContext
+        ) {
+
+            try {
+
+                state.audioContext.suspend();
+
+            } catch (error) {
+
+                console.warn(
+                    "Audio suspend failed.",
+                    error
+                );
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   28. DEBUG INFORMATION
+   ========================================================= */
+
+window.MonarchAurexInvitation = {
+    state,
+
+    showLayer,
+
+    openDiscovery,
+
+    closeDiscoveryModal,
+
+    showNotification,
+
+    createCelebration,
+
+    moveEnergyEmblem
+};
+
+
+/* =========================================================
+   29. READY
+   ========================================================= */
+
+console.log(
+    "%cMONARCHAUREX",
+    "font-size:24px;font-weight:bold;color:#C7A45B;"
+);
+
+console.log(
+    "%cPrivate invitation system initialized.",
+    "font-size:12px;color:#98A4B8;"
+);
+
+console.log(
+    "%cLIHLE × MONARCHAUREX",
+    "font-size:11px;color:#D7BD82;"
+);
