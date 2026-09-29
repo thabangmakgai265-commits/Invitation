@@ -1,407 +1,1833 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>BTR2020 | Training Invitation</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <meta
+        name="description"
+        content="A private MonarchAurex invitation prepared exclusively for Lihle."
+    >
+
+    <meta
+        name="theme-color"
+        content="#080B12"
+    >
+
+    <title>
+        MonarchAurex | Private Invitation
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <!-- ============================= -->
-    <!-- BACKGROUND -->
-    <!-- ============================= -->
 
-    <div class="background">
-        <div class="orb orb-one"></div>
-        <div class="orb orb-two"></div>
-        <div class="grid"></div>
+    <!-- ========================================================= -->
+    <!-- GLOBAL BACKGROUND                                         -->
+    <!-- ========================================================= -->
+
+    <div
+        class="site-background"
+        aria-hidden="true"
+    >
+
+        <div class="background-grid"></div>
+
+        <div class="background-glow glow-one"></div>
+
+        <div class="background-glow glow-two"></div>
+
+        <div class="background-glow glow-three"></div>
+
+        <div class="background-particles"></div>
+
     </div>
 
 
-    <!-- ============================= -->
-    <!-- PROGRESS -->
-    <!-- ============================= -->
 
-    <div class="progress">
-        <span class="progress-dot active"></span>
-        <span class="progress-line"></span>
-        <span class="progress-dot"></span>
-        <span class="progress-line"></span>
-        <span class="progress-dot"></span>
-        <span class="progress-line"></span>
-        <span class="progress-dot"></span>
+    <!-- ========================================================= -->
+    <!-- MONARCHAUREX EMBLEM                                       -->
+    <!-- ========================================================= -->
+
+    <div
+        class="monarch-emblem"
+        id="monarchEmblem"
+        aria-hidden="true"
+    >
+
+        <div class="emblem-outer-ring"></div>
+
+        <div class="emblem-inner-ring"></div>
+
+        <div class="emblem-letter">
+            M
+        </div>
+
     </div>
 
 
-    <!-- ============================= -->
-    <!-- LAYER 1 -->
-    <!-- ============================= -->
 
-    <section class="screen active" id="welcome">
+    <!-- ========================================================= -->
+    <!-- EXPERIENCE PROGRESS                                      -->
+    <!-- ========================================================= -->
 
-        <div class="welcome-content">
+    <div
+        class="experience-progress"
+        id="experienceProgress"
+        aria-hidden="true"
+    >
 
-            <div class="eyebrow">
-                BTR2020 • DIGITAL INVITATION
-            </div>
+        <div class="progress-track">
 
-            <div class="symbol">
-                ✦
-            </div>
+            <span
+                class="progress-step active"
+                data-step="1"
+            ></span>
 
-            <h1>
-                You have been<br>
-                <span>summoned.</span>
-            </h1>
+            <span
+                class="progress-step"
+                data-step="2"
+            ></span>
 
-            <p>
-                Before your invitation is revealed,
-                you must complete a very small challenge.
-            </p>
+            <span
+                class="progress-step"
+                data-step="3"
+            ></span>
 
-            <div class="warning">
-                <span>⚠</span>
-                Don't worry. No marks will be awarded.
-            </div>
+            <span
+                class="progress-step"
+                data-step="4"
+            ></span>
 
-            <button class="primary-btn" onclick="startChallenge()">
-                ACCEPT THE CHALLENGE
-                <span>→</span>
-            </button>
+            <span
+                class="progress-step"
+                data-step="5"
+            ></span>
 
-        </div>
-
-    </section>
-
-
-    <!-- ============================= -->
-    <!-- LAYER 2 -->
-    <!-- QUESTION 1 -->
-    <!-- ============================= -->
-
-    <section class="screen" id="question1">
-
-        <div class="challenge-card">
-
-            <div class="challenge-number">
-                01 / 03
-            </div>
-
-            <div class="challenge-icon">
-                &lt;/&gt;
-            </div>
-
-            <h2>
-                Let's see if you<br>
-                remember this one.
-            </h2>
-
-            <p class="question">
-                What does HTML mainly control?
-            </p>
-
-            <div class="answers">
-
-                <button onclick="answerQ1('correct')">
-                    <span>A</span>
-                    The structure of a webpage
-                </button>
-
-                <button onclick="answerQ1('wrong')">
-                    <span>B</span>
-                    Your Wi-Fi password
-                </button>
-
-                <button onclick="answerQ1('funny')">
-                    <span>C</span>
-                    Your lecturer's mood
-                </button>
-
-            </div>
-
-            <div class="feedback" id="feedback1"></div>
+            <span
+                class="progress-step"
+                data-step="6"
+            ></span>
 
         </div>
 
-    </section>
+    </div>
 
 
-    <!-- ============================= -->
-    <!-- QUESTION 2 -->
-    <!-- ============================= -->
 
-    <section class="screen" id="question2">
+    <!-- ========================================================= -->
+    <!-- MAIN EXPERIENCE                                          -->
+    <!-- ========================================================= -->
 
-        <div class="challenge-card">
-
-            <div class="challenge-number">
-                02 / 03
-            </div>
-
-            <div class="challenge-icon">
-                🎨
-            </div>
-
-            <h2>
-                One more.<br>
-                Don't overthink it.
-            </h2>
-
-            <p class="question">
-                What makes a webpage look good?
-            </p>
-
-            <div class="answers">
-
-                <button onclick="answerQ2('correct')">
-                    <span>A</span>
-                    CSS
-                </button>
-
-                <button onclick="answerQ2('funny')">
-                    <span>B</span>
-                    Closing and reopening VS Code
-                </button>
-
-                <button onclick="answerQ2('wrong')">
-                    <span>C</span>
-                    Microsoft Word
-                </button>
-
-            </div>
-
-            <div class="feedback" id="feedback2"></div>
-
-        </div>
-
-    </section>
+    <main id="invitationExperience">
 
 
-    <!-- ============================= -->
-    <!-- QUESTION 3 -->
-    <!-- ============================= -->
 
-    <section class="screen" id="question3">
+        <!-- ===================================================== -->
+        <!-- LAYER 01 — ARRIVAL                                   -->
+        <!-- ===================================================== -->
 
-        <div class="challenge-card">
+        <section
+            class="experience-layer active"
+            id="layerArrival"
+            data-layer="1"
+        >
 
-            <div class="challenge-number">
-                FINAL CHECK
-            </div>
-
-            <div class="challenge-icon">
-                🔐
-            </div>
-
-            <h2>
-                Final security check.
-            </h2>
-
-            <p class="question">
-                What should come first when creating a website?
-            </p>
-
-            <div class="answers">
-
-                <button onclick="answerQ3('wrong')">
-                    <span>A</span>
-                    Start coding immediately
-                </button>
-
-                <button onclick="answerQ3('correct')">
-                    <span>B</span>
-                    Plan the content and structure
-                </button>
-
-                <button onclick="answerQ3('funny')">
-                    <span>C</span>
-                    Choose a cool domain name
-                </button>
-
-            </div>
-
-            <div class="feedback" id="feedback3"></div>
-
-        </div>
-
-    </section>
+            <div class="layer-content arrival-content">
 
 
-    <!-- ============================= -->
-    <!-- UNLOCK -->
-    <!-- ============================= -->
+                <div class="brand-mark">
 
-    <section class="screen" id="unlock">
+                    <span class="brand-line"></span>
 
-        <div class="unlock-content">
+                    <span class="brand-name">
+                        MONARCHAUREX
+                    </span>
 
-            <div class="unlock-ring">
-                <span>✓</span>
-            </div>
+                    <span class="brand-line"></span>
 
-            <p class="eyebrow">
-                VERIFICATION COMPLETE
-            </p>
-
-            <h1>
-                Access <span>Granted.</span>
-            </h1>
-
-            <p>
-                Your lecturer verification process
-                has been successfully completed.
-            </p>
-
-            <div class="terminal">
-                <span>></span> identity verified<br>
-                <span>></span> challenge completed<br>
-                <span>></span> invitation unlocked
-            </div>
-
-            <button class="primary-btn" onclick="openInvitation()">
-                OPEN INVITATION
-                <span>→</span>
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- ============================= -->
-    <!-- INVITATION -->
-    <!-- ============================= -->
-
-    <section class="screen invitation-screen" id="invitation">
-
-        <div class="invitation-card">
-
-            <div class="invitation-top">
-                <span>BTR2020</span>
-                <span>2026</span>
-            </div>
-
-            <div class="invitation-symbol">
-                ✦
-            </div>
-
-            <p class="small-title">
-                YOU ARE CORDIALLY INVITED TO
-            </p>
-
-            <h1>
-                Creating a<br>
-                <span>Professional</span><br>
-                Portfolio Website
-            </h1>
-
-            <div class="divider"></div>
-
-            <p class="invitation-message">
-                Join us for a practical training programme
-                exploring how students can plan, design,
-                create and publish a professional portfolio
-                website.
-            </p>
-
-            <div class="details">
-
-                <div class="detail">
-                    <span class="detail-icon">◷</span>
-                    <div>
-                        <small>DATE</small>
-                        <strong>16 October 2026</strong>
-                    </div>
                 </div>
 
-                <div class="detail">
-                    <span class="detail-icon">◉</span>
-                    <div>
-                        <small>TIME</small>
-                        <strong>10:00 – 10:30</strong>
-                    </div>
-                </div>
 
-                <div class="detail">
-                    <span class="detail-icon">⌂</span>
-                    <div>
-                        <small>VENUE</small>
-                        <strong>Computer Lab 2</strong>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="presenters">
-
-                <small>PRESENTED BY</small>
-
-                <p>
-                    Thabang Makgai • Lihle Mbeki •
-                    Amahle Jacobs
+                <p class="micro-label">
+                    PRIVATE INVITATION
                 </p>
 
+
+                <div class="arrival-emblem">
+
+                    <div class="arrival-ring ring-one"></div>
+
+                    <div class="arrival-ring ring-two"></div>
+
+                    <div class="arrival-ring ring-three"></div>
+
+                    <div class="arrival-m">
+                        M
+                    </div>
+
+                </div>
+
+
+                <p class="prepared-for">
+                    Prepared exclusively for
+                </p>
+
+
+                <h1 class="guest-name">
+                    Lihle
+                </h1>
+
+
+                <p class="arrival-message">
+                    Something has been prepared for you.
+                </p>
+
+
+                <button
+                    class="premium-button"
+                    id="enterInvitation"
+                    type="button"
+                >
+
+                    <span>
+                        ENTER INVITATION
+                    </span>
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <p class="bottom-note">
+                    A private MonarchAurex experience
+                </p>
+
+
             </div>
 
-            <button class="rsvp-btn" onclick="showRSVP()">
-                CONFIRM ATTENDANCE
-            </button>
-
-            <p class="footer-note">
-                We would be honoured to have you join us.
-            </p>
-
-        </div>
-
-    </section>
+        </section>
 
 
-    <!-- ============================= -->
-    <!-- RSVP -->
-    <!-- ============================= -->
 
-    <div class="modal" id="rsvpModal">
+        <!-- ===================================================== -->
+        <!-- LAYER 02 — IDENTITY CHECK                            -->
+        <!-- ===================================================== -->
 
-        <div class="rsvp-card">
+        <section
+            class="experience-layer"
+            id="layerIdentity"
+            data-layer="2"
+        >
 
-            <button class="close" onclick="closeRSVP()">×</button>
+            <div class="layer-content identity-content">
 
-            <div class="success-icon">
-                ✓
+
+                <span class="section-number">
+                    01 / ACCESS
+                </span>
+
+
+                <div class="security-symbol">
+
+                    <div class="security-circle">
+
+                        <span>
+                            ?
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <p class="micro-label">
+                    IDENTITY VERIFICATION
+                </p>
+
+
+                <h2>
+                    Before we continue...
+                </h2>
+
+
+                <p class="large-question">
+                    Are you Lihle?
+                </p>
+
+
+                <p class="supporting-text">
+                    This invitation was prepared specifically
+                    for one person.
+                </p>
+
+
+                <div class="identity-actions">
+
+                    <button
+                        class="premium-button"
+                        id="confirmIdentity"
+                        type="button"
+                    >
+
+                        <span>
+                            YES, THAT'S ME
+                        </span>
+
+                        <span class="button-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="identity-confirmation"
+                    id="identityConfirmation"
+                >
+
+                    <span class="confirmation-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Identity confirmed.
+                    </span>
+
+                </div>
+
+
             </div>
 
-            <p class="eyebrow">
-                INVITATION RECEIVED
-            </p>
+        </section>
 
-            <h2>
-                Thank you,
-                <span>Professor.</span>
-            </h2>
 
-            <p>
-                Your attendance has been noted.
-            </p>
 
-            <div class="rsvp-message">
-                We look forward to welcoming you
-                to the training programme.
+        <!-- ===================================================== -->
+        <!-- LAYER 03 — PRIVATE REVEAL                            -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerReveal"
+            data-layer="3"
+        >
+
+            <div class="layer-content reveal-content">
+
+
+                <span class="section-number">
+                    02 / REVEAL
+                </span>
+
+
+                <div class="reveal-emblem">
+
+                    <div class="reveal-ring"></div>
+
+                    <div class="reveal-m">
+                        M
+                    </div>
+
+                </div>
+
+
+                <p class="micro-label">
+                    MONARCHAUREX
+                </p>
+
+
+                <h2>
+                    This isn't a<br>
+                    <span>portfolio request.</span>
+                </h2>
+
+
+                <div class="reveal-divider"></div>
+
+
+                <p class="reveal-statement">
+                    It's an opportunity.
+                </p>
+
+
+                <p class="supporting-text">
+                    We'd like to show you why this invitation
+                    was prepared specifically for you.
+                </p>
+
+
+                <button
+                    class="text-button"
+                    id="discoverOpportunity"
+                    type="button"
+                >
+
+                    DISCOVER THE INVITATION
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+
             </div>
 
-            <button class="primary-btn" onclick="closeRSVP()">
-                CLOSE
-            </button>
+        </section>
 
-        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 04 — DISCOVERY HUB                             -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerDiscovery"
+            data-layer="4"
+        >
+
+            <div class="layer-content discovery-content">
+
+
+                <span class="section-number">
+                    03 / DISCOVER
+                </span>
+
+
+                <p class="micro-label">
+                    THREE THINGS TO EXPLORE
+                </p>
+
+
+                <h2>
+                    Before you decide,
+                    <span>discover.</span>
+                </h2>
+
+
+                <p class="supporting-text">
+                    Each layer reveals another part of
+                    the MonarchAurex invitation.
+                </p>
+
+
+                <div class="discovery-cards">
+
+
+
+                    <!-- CARD 01 -->
+
+                    <article
+                        class="discovery-card"
+                        data-discovery="idea"
+                    >
+
+                        <div class="card-number">
+                            01
+                        </div>
+
+                        <div class="card-icon">
+                            ✦
+                        </div>
+
+                        <h3>
+                            THE IDEA
+                        </h3>
+
+                        <p>
+                            What MonarchAurex is building.
+                        </p>
+
+                        <button
+                            class="card-open"
+                            type="button"
+                            data-open="idea"
+                        >
+                            OPEN
+                            <span>→</span>
+                        </button>
+
+                    </article>
+
+
+
+                    <!-- CARD 02 -->
+
+                    <article
+                        class="discovery-card"
+                        data-discovery="opportunity"
+                    >
+
+                        <div class="card-number">
+                            02
+                        </div>
+
+                        <div class="card-icon">
+                            ◇
+                        </div>
+
+                        <h3>
+                            THE OPPORTUNITY
+                        </h3>
+
+                        <p>
+                            Why we'd like you involved.
+                        </p>
+
+                        <button
+                            class="card-open"
+                            type="button"
+                            data-open="opportunity"
+                        >
+                            OPEN
+                            <span>→</span>
+                        </button>
+
+                    </article>
+
+
+
+                    <!-- CARD 03 -->
+
+                    <article
+                        class="discovery-card"
+                        data-discovery="proposal"
+                    >
+
+                        <div class="card-number">
+                            03
+                        </div>
+
+                        <div class="card-icon">
+                            ⟡
+                        </div>
+
+                        <h3>
+                            THE PROPOSAL
+                        </h3>
+
+                        <p>
+                            What the collaboration involves.
+                        </p>
+
+                        <button
+                            class="card-open"
+                            type="button"
+                            data-open="proposal"
+                        >
+                            OPEN
+                            <span>→</span>
+                        </button>
+
+                    </article>
+
+
+                </div>
+
+
+                <div
+                    class="discovery-status"
+                    id="discoveryStatus"
+                >
+                    0 / 3 explored
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================================================= -->
+            <!-- DISCOVERY MODAL                                  -->
+            <!-- ================================================= -->
+
+            <div
+                class="discovery-overlay"
+                id="discoveryOverlay"
+            >
+
+                <div class="discovery-modal">
+
+
+                    <button
+                        class="modal-close"
+                        id="closeDiscovery"
+                        type="button"
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+
+
+                    <!-- IDEA -->
+
+                    <div
+                        class="discovery-panel"
+                        id="panelIdea"
+                    >
+
+                        <span class="panel-number">
+                            01 / THE IDEA
+                        </span>
+
+                        <div class="panel-symbol">
+                            ✦
+                        </div>
+
+                        <h3>
+                            A professional digital identity
+                            should reflect potential.
+                        </h3>
+
+                        <p>
+                            MonarchAurex is building a premium
+                            digital platform for students,
+                            graduates and professionals who
+                            want their online presence to
+                            represent who they are and what
+                            they can become.
+                        </p>
+
+                        <p>
+                            But MonarchAurex is not only about
+                            websites. It is about creating a
+                            stronger digital identity around
+                            professional potential.
+                        </p>
+
+                        <button
+                            class="panel-next"
+                            type="button"
+                            data-next-panel="opportunity"
+                        >
+                            CONTINUE
+                            <span>→</span>
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- OPPORTUNITY -->
+
+                    <div
+                        class="discovery-panel"
+                        id="panelOpportunity"
+                    >
+
+                        <span class="panel-number">
+                            02 / THE OPPORTUNITY
+                        </span>
+
+                        <div class="panel-symbol">
+                            ◇
+                        </div>
+
+                        <h3>
+                            We'd like you to be part
+                            of the journey.
+                        </h3>
+
+                        <p>
+                            Lihle, we'd like to invite you
+                            to become part of the
+                            MonarchAurex journey.
+                        </p>
+
+                        <p class="emphasis-text">
+                            Not as a customer.
+                        </p>
+
+                        <p class="emphasis-text">
+                            As a collaborator.
+                        </p>
+
+                        <p>
+                            We'd like you to share your
+                            genuine experience with
+                            MonarchAurex through selected
+                            LinkedIn content and a review
+                            of your experience on our website.
+                        </p>
+
+                        <button
+                            class="panel-next"
+                            type="button"
+                            data-next-panel="proposal"
+                        >
+                            SHOW ME THE PROPOSAL
+                            <span>→</span>
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- PROPOSAL -->
+
+                    <div
+                        class="discovery-panel"
+                        id="panelProposal"
+                    >
+
+                        <span class="panel-number">
+                            03 / THE PROPOSAL
+                        </span>
+
+                        <div class="panel-symbol">
+                            ⟡
+                        </div>
+
+                        <h3>
+                            Your voice.
+                            Your experience.
+                        </h3>
+
+                        <div class="proposal-highlight">
+
+                            <span>
+                                02
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    FEATURED POSTS
+                                </strong>
+
+                                <small>
+                                    One post every 30 days
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <p>
+                            We'd like you to share your
+                            genuine experience with
+                            MonarchAurex through selected
+                            LinkedIn posts.
+                        </p>
+
+                        <p>
+                            We also want your honest experience
+                            reflected through a review on our
+                            website.
+                        </p>
+
+                        <p class="proposal-note">
+                            No scripted praise.
+                            No forced wording.
+                            Your experience. Your voice.
+                        </p>
+
+                        <p>
+                            If you choose to continue the
+                            collaboration, selected MonarchAurex
+                            services and updates may also be
+                            provided as part of the ongoing
+                            collaboration.
+                        </p>
+
+                        <button
+                            class="panel-next"
+                            type="button"
+                            data-finish-discovery="true"
+                        >
+                            I UNDERSTAND
+                            <span>→</span>
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 05 — FORMAL INVITATION                         -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerFormalInvitation"
+            data-layer="5"
+        >
+
+            <div class="formal-invitation-card">
+
+
+                <div class="formal-top">
+
+                    <span>
+                        MONARCHAUREX
+                    </span>
+
+                    <span>
+                        PRIVATE
+                    </span>
+
+                </div>
+
+
+                <div class="formal-emblem">
+                    M
+                </div>
+
+
+                <p class="micro-label">
+                    A PRIVATE INVITATION
+                </p>
+
+
+                <h2>
+                    Lihle,
+                    <span>this is for you.</span>
+                </h2>
+
+
+                <div class="formal-divider"></div>
+
+
+                <p class="formal-message">
+                    We would like to formally invite you
+                    to become part of the MonarchAurex
+                    journey.
+                </p>
+
+
+                <div class="formal-points">
+
+
+                    <div class="formal-point">
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                SHARE
+                            </strong>
+
+                            <p>
+                                Share your genuine experience
+                                with MonarchAurex.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="formal-point">
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                CONNECT
+                            </strong>
+
+                            <p>
+                                Share selected experiences
+                                through LinkedIn.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="formal-point">
+
+                        <span>
+                            03
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                CONTINUE
+                            </strong>
+
+                            <p>
+                                Explore an ongoing
+                                collaboration with MonarchAurex.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="formal-action">
+
+                    <p>
+                        The invitation is yours.
+                    </p>
+
+                    <button
+                        class="premium-button"
+                        id="acceptInvitation"
+                        type="button"
+                    >
+
+                        <span>
+                            ACCEPT INVITATION
+                        </span>
+
+                        <span class="button-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 06 — WAIT / FAKE APPROVAL INTERRUPTION         -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerWait"
+            data-layer="6"
+        >
+
+            <div class="layer-content wait-content">
+
+
+                <div class="wait-symbol">
+                    !
+                </div>
+
+
+                <p class="micro-label">
+                    WAIT A SECOND
+                </p>
+
+
+                <h2>
+                    That was it?
+                </h2>
+
+
+                <p class="wait-face">
+                    😐
+                </p>
+
+
+                <p class="large-question">
+                    Where's your energy?
+                </p>
+
+
+                <p class="supporting-text">
+                    You just accepted an invitation from
+                    MonarchAurex.
+                </p>
+
+
+                <p class="supporting-text">
+                    Surely you're a little more excited
+                    than that.
+                </p>
+
+
+                <button
+                    class="premium-button"
+                    id="startFunVerification"
+                    type="button"
+                >
+
+                    <span>
+                        SHOW ME WHAT YOU'VE GOT
+                    </span>
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 07 — HAPPINESS VERIFICATION                    -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerHappiness"
+            data-layer="7"
+        >
+
+            <div class="layer-content happiness-content">
+
+
+                <span class="section-number">
+                    FINAL VERIFICATION / 01
+                </span>
+
+
+                <div class="verification-icon">
+                    😊
+                </div>
+
+
+                <p class="micro-label">
+                    HAPPINESS VERIFICATION
+                </p>
+
+
+                <h2>
+                    We cannot approve<br>
+                    your confirmation yet.
+                </h2>
+
+
+                <p class="supporting-text">
+                    Our system has detected an
+                    insufficient level of excitement.
+                </p>
+
+
+                <div class="happiness-status">
+
+                    <span>
+                        CURRENT HAPPINESS LEVEL
+                    </span>
+
+                    <strong id="happinessValue">
+                        42%
+                    </strong>
+
+                </div>
+
+
+                <div class="mood-meter">
+
+
+                    <div class="mood-labels">
+
+                        <span>
+                            😐
+                        </span>
+
+                        <span>
+                            😄
+                        </span>
+
+                    </div>
+
+
+                    <input
+                        type="range"
+                        id="happinessSlider"
+                        min="42"
+                        max="100"
+                        value="42"
+                    >
+
+
+                    <div class="meter-track">
+
+                        <div
+                            class="meter-fill"
+                            id="meterFill"
+                        ></div>
+
+                    </div>
+
+
+                </div>
+
+
+                <p
+                    class="verification-feedback"
+                    id="happinessFeedback"
+                >
+                    This is unacceptable.
+                </p>
+
+
+                <button
+                    class="premium-button disabled-button"
+                    id="happinessContinue"
+                    type="button"
+                    disabled
+                >
+
+                    <span>
+                        CONTINUE
+                    </span>
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 08 — SMILE CHALLENGE                           -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerSmile"
+            data-layer="8"
+        >
+
+            <div class="layer-content smile-content">
+
+
+                <span class="section-number">
+                    FINAL VERIFICATION / 02
+                </span>
+
+
+                <div class="smile-icon">
+                    😊
+                </div>
+
+
+                <p class="micro-label">
+                    ONE LAST TEST
+                </p>
+
+
+                <h2>
+                    Please smile for us.
+                </h2>
+
+
+                <p class="supporting-text">
+                    We need evidence.
+                </p>
+
+
+                <div class="smile-card">
+
+                    <div class="camera-placeholder">
+
+                        <span>
+                            📸
+                        </span>
+
+                        <small>
+                            CAMERA NOT REQUIRED
+                        </small>
+
+                    </div>
+
+                    <p>
+                        Don't worry.
+                        We're trusting you on this one.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="premium-button"
+                    id="smileButton"
+                    type="button"
+                >
+
+                    <span>
+                        I'M SMILING 😁
+                    </span>
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <div
+                    class="smile-feedback"
+                    id="smileFeedback"
+                ></div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 09 — ENERGY GAME                               -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerEnergy"
+            data-layer="9"
+        >
+
+            <div class="layer-content energy-content">
+
+
+                <span class="section-number">
+                    FINAL VERIFICATION / 03
+                </span>
+
+
+                <p class="micro-label">
+                    ENERGY TEST
+                </p>
+
+
+                <h2>
+                    Okay Lihle...
+                </h2>
+
+
+                <p class="large-question">
+                    Let's test your energy.
+                </p>
+
+
+                <p class="supporting-text">
+                    Catch the MonarchAurex emblem
+                    five times.
+                </p>
+
+
+                <div class="energy-score">
+
+                    <span>
+                        ENERGY
+                    </span>
+
+                    <strong>
+                        <span id="energyScore">
+                            0
+                        </span>
+                        / 5
+                    </strong>
+
+                </div>
+
+
+                <div
+                    class="energy-arena"
+                    id="energyArena"
+                >
+
+                    <button
+                        class="moving-emblem"
+                        id="movingEmblem"
+                        type="button"
+                        aria-label="Catch the emblem"
+                    >
+
+                        M
+
+                    </button>
+
+                </div>
+
+
+                <p
+                    class="energy-feedback"
+                    id="energyFeedback"
+                >
+                    Catch it.
+                </p>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 10 — IMPORTANT QUESTION                        -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerImportantQuestion"
+            data-layer="10"
+        >
+
+            <div class="layer-content important-content">
+
+
+                <span class="section-number">
+                    FINAL VERIFICATION / 04
+                </span>
+
+
+                <div class="question-symbol">
+                    ?
+                </div>
+
+
+                <p class="micro-label">
+                    VERY IMPORTANT QUESTION
+                </p>
+
+
+                <h2>
+                    Choose wisely.
+                </h2>
+
+
+                <p class="supporting-text">
+                    If MonarchAurex invited you to
+                    celebrate this opportunity,
+                    what are you bringing?
+                </p>
+
+
+                <div class="vibe-options">
+
+
+                    <button
+                        class="vibe-option"
+                        data-answer="good-vibes"
+                        type="button"
+                    >
+
+                        <span>
+                            ✨
+                        </span>
+
+                        <strong>
+                            GOOD VIBES
+                        </strong>
+
+                    </button>
+
+
+
+                    <button
+                        class="vibe-option"
+                        data-answer="energy"
+                        type="button"
+                    >
+
+                        <span>
+                            🔥
+                        </span>
+
+                        <strong>
+                            ENERGY
+                        </strong>
+
+                    </button>
+
+
+
+                    <button
+                        class="vibe-option"
+                        data-answer="snacks"
+                        type="button"
+                    >
+
+                        <span>
+                            🍕
+                        </span>
+
+                        <strong>
+                            SNACKS
+                        </strong>
+
+                    </button>
+
+
+
+                    <button
+                        class="vibe-option"
+                        data-answer="all"
+                        type="button"
+                    >
+
+                        <span>
+                            ✨🔥🍕
+                        </span>
+
+                        <strong>
+                            ALL OF THE ABOVE
+                        </strong>
+
+                    </button>
+
+
+                </div>
+
+
+                <div
+                    class="vibe-feedback"
+                    id="vibeFeedback"
+                ></div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 11 — FINAL SYSTEM VERIFICATION                 -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerFinalVerification"
+            data-layer="11"
+        >
+
+            <div class="layer-content final-verification-content">
+
+
+                <div class="final-emblem">
+
+                    <div class="final-ring"></div>
+
+                    <div class="final-m">
+                        M
+                    </div>
+
+                </div>
+
+
+                <p class="micro-label">
+                    MONARCHAUREX
+                </p>
+
+
+                <h2>
+                    Running final<br>
+                    verification...
+                </h2>
+
+
+                <div class="verification-terminal">
+
+
+                    <div class="terminal-row">
+
+                        <span>
+                            IDENTITY
+                        </span>
+
+                        <strong id="verifyIdentity">
+                            WAITING
+                        </strong>
+
+                    </div>
+
+
+                    <div class="terminal-row">
+
+                        <span>
+                            INVITATION
+                        </span>
+
+                        <strong id="verifyInvitation">
+                            WAITING
+                        </strong>
+
+                    </div>
+
+
+                    <div class="terminal-row">
+
+                        <span>
+                            ENERGY
+                        </span>
+
+                        <strong id="verifyEnergy">
+                            WAITING
+                        </strong>
+
+                    </div>
+
+
+                    <div class="terminal-row">
+
+                        <span>
+                            HAPPINESS
+                        </span>
+
+                        <strong id="verifyHappiness">
+                            WAITING
+                        </strong>
+
+                    </div>
+
+
+                    <div class="terminal-row">
+
+                        <span>
+                            VIBES
+                        </span>
+
+                        <strong id="verifyVibes">
+                            WAITING
+                        </strong>
+
+                    </div>
+
+
+                    <div class="terminal-row">
+
+                        <span>
+                            COMMITMENT
+                        </span>
+
+                        <strong id="verifyCommitment">
+                            WAITING
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+                <div
+                    class="verification-status"
+                    id="verificationStatus"
+                >
+                    VERIFYING...
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 12 — APPROVED                                  -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerApproved"
+            data-layer="12"
+        >
+
+            <div class="layer-content approved-content">
+
+
+                <div class="approved-symbol">
+
+                    <div class="approved-ring">
+
+                        <span>
+                            ✓
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <p class="micro-label">
+                    VERIFICATION COMPLETE
+                </p>
+
+
+                <h2>
+                    <span>APPROVED.</span>
+                </h2>
+
+
+                <p class="guest-approved">
+                    Welcome, Lihle.
+                </p>
+
+
+                <p class="supporting-text">
+                    Your invitation has officially
+                    been confirmed.
+                </p>
+
+
+                <div class="approved-card">
+
+                    <div>
+
+                        <small>
+                            GUEST
+                        </small>
+
+                        <strong>
+                            Lihle
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <small>
+                            STATUS
+                        </small>
+
+                        <strong>
+                            CONFIRMED ✓
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <small>
+                            INVITATION
+                        </small>
+
+                        <strong>
+                            ACCEPTED
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="premium-button"
+                    id="welcomeToMonarch"
+                    type="button"
+                >
+
+                    <span>
+                        CONTINUE
+                    </span>
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================================== -->
+        <!-- LAYER 13 — FINAL MONARCHAUREX MOMENT                 -->
+        <!-- ===================================================== -->
+
+        <section
+            class="experience-layer"
+            id="layerWelcome"
+            data-layer="13"
+        >
+
+            <div class="layer-content final-welcome-content">
+
+
+                <div class="final-brand-emblem">
+
+                    <div class="final-brand-ring"></div>
+
+                    <div class="final-brand-m">
+                        M
+                    </div>
+
+                </div>
+
+
+                <p class="micro-label">
+                    MONARCHAUREX
+                </p>
+
+
+                <h2>
+                    Welcome to<br>
+                    <span>the journey.</span>
+                </h2>
+
+
+                <p class="final-guest">
+                    LIHLE × MONARCHAUREX
+                </p>
+
+
+                <div class="final-divider"></div>
+
+
+                <p class="final-message">
+                    Something new begins here.
+                </p>
+
+
+                <a
+                    href="https://monarchaurex.co.za/"
+                    class="premium-button final-site-button"
+                    id="enterMonarchAurex"
+                >
+
+                    <span>
+                        ENTER MONARCHAUREX
+                    </span>
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
+                <p class="final-tagline">
+                    Not Just a Portfolio.
+                    A Professional Identity.
+                </p>
+
+
+            </div>
+
+        </section>
+
+
+
+    </main>
+
+
+
+    <!-- ========================================================= -->
+    <!-- CONFETTI / CELEBRATION SYSTEM                            -->
+    <!-- ========================================================= -->
+
+    <div
+        class="celebration-layer"
+        id="celebrationLayer"
+        aria-hidden="true"
+    >
+
+        <div class="confetti-container"></div>
+
+        <div class="celebration-glow"></div>
 
     </div>
 
+
+
+    <!-- ========================================================= -->
+    <!-- NOTIFICATION                                             -->
+    <!-- ========================================================= -->
+
+    <div
+        class="system-notification"
+        id="systemNotification"
+        role="status"
+        aria-live="polite"
+    >
+
+        <span class="notification-icon">
+            ✓
+        </span>
+
+        <span
+            id="notificationMessage"
+        >
+            System updated.
+        </span>
+
+    </div>
+
+
+
+    <!-- ========================================================= -->
+    <!-- SOUND CONTROL                                            -->
+    <!-- ========================================================= -->
+
+    <button
+        class="sound-control"
+        id="soundControl"
+        type="button"
+        aria-label="Toggle sound"
+    >
+
+        <span class="sound-icon">
+            ◉
+        </span>
+
+        <span class="sound-label">
+            SOUND
+        </span>
+
+    </button>
+
+
+
+    <!-- ========================================================= -->
+    <!-- SCRIPT                                                    -->
+    <!-- ========================================================= -->
 
     <script src="script.js"></script>
 
+
 </body>
+
 </html>
