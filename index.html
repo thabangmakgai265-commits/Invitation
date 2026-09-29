@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BTR2020 | Training Invitation</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ============================= -->
+    <!-- BACKGROUND -->
+    <!-- ============================= -->
+
+    <div class="background">
+        <div class="orb orb-one"></div>
+        <div class="orb orb-two"></div>
+        <div class="grid"></div>
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- PROGRESS -->
+    <!-- ============================= -->
+
+    <div class="progress">
+        <span class="progress-dot active"></span>
+        <span class="progress-line"></span>
+        <span class="progress-dot"></span>
+        <span class="progress-line"></span>
+        <span class="progress-dot"></span>
+        <span class="progress-line"></span>
+        <span class="progress-dot"></span>
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- LAYER 1 -->
+    <!-- ============================= -->
+
+    <section class="screen active" id="welcome">
+
+        <div class="welcome-content">
+
+            <div class="eyebrow">
+                BTR2020 • DIGITAL INVITATION
+            </div>
+
+            <div class="symbol">
+                ✦
+            </div>
+
+            <h1>
+                You have been<br>
+                <span>summoned.</span>
+            </h1>
+
+            <p>
+                Before your invitation is revealed,
+                you must complete a very small challenge.
+            </p>
+
+            <div class="warning">
+                <span>⚠</span>
+                Don't worry. No marks will be awarded.
+            </div>
+
+            <button class="primary-btn" onclick="startChallenge()">
+                ACCEPT THE CHALLENGE
+                <span>→</span>
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- LAYER 2 -->
+    <!-- QUESTION 1 -->
+    <!-- ============================= -->
+
+    <section class="screen" id="question1">
+
+        <div class="challenge-card">
+
+            <div class="challenge-number">
+                01 / 03
+            </div>
+
+            <div class="challenge-icon">
+                &lt;/&gt;
+            </div>
+
+            <h2>
+                Let's see if you<br>
+                remember this one.
+            </h2>
+
+            <p class="question">
+                What does HTML mainly control?
+            </p>
+
+            <div class="answers">
+
+                <button onclick="answerQ1('correct')">
+                    <span>A</span>
+                    The structure of a webpage
+                </button>
+
+                <button onclick="answerQ1('wrong')">
+                    <span>B</span>
+                    Your Wi-Fi password
+                </button>
+
+                <button onclick="answerQ1('funny')">
+                    <span>C</span>
+                    Your lecturer's mood
+                </button>
+
+            </div>
+
+            <div class="feedback" id="feedback1"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- QUESTION 2 -->
+    <!-- ============================= -->
+
+    <section class="screen" id="question2">
+
+        <div class="challenge-card">
+
+            <div class="challenge-number">
+                02 / 03
+            </div>
+
+            <div class="challenge-icon">
+                🎨
+            </div>
+
+            <h2>
+                One more.<br>
+                Don't overthink it.
+            </h2>
+
+            <p class="question">
+                What makes a webpage look good?
+            </p>
+
+            <div class="answers">
+
+                <button onclick="answerQ2('correct')">
+                    <span>A</span>
+                    CSS
+                </button>
+
+                <button onclick="answerQ2('funny')">
+                    <span>B</span>
+                    Closing and reopening VS Code
+                </button>
+
+                <button onclick="answerQ2('wrong')">
+                    <span>C</span>
+                    Microsoft Word
+                </button>
+
+            </div>
+
+            <div class="feedback" id="feedback2"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- QUESTION 3 -->
+    <!-- ============================= -->
+
+    <section class="screen" id="question3">
+
+        <div class="challenge-card">
+
+            <div class="challenge-number">
+                FINAL CHECK
+            </div>
+
+            <div class="challenge-icon">
+                🔐
+            </div>
+
+            <h2>
+                Final security check.
+            </h2>
+
+            <p class="question">
+                What should come first when creating a website?
+            </p>
+
+            <div class="answers">
+
+                <button onclick="answerQ3('wrong')">
+                    <span>A</span>
+                    Start coding immediately
+                </button>
+
+                <button onclick="answerQ3('correct')">
+                    <span>B</span>
+                    Plan the content and structure
+                </button>
+
+                <button onclick="answerQ3('funny')">
+                    <span>C</span>
+                    Choose a cool domain name
+                </button>
+
+            </div>
+
+            <div class="feedback" id="feedback3"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- UNLOCK -->
+    <!-- ============================= -->
+
+    <section class="screen" id="unlock">
+
+        <div class="unlock-content">
+
+            <div class="unlock-ring">
+                <span>✓</span>
+            </div>
+
+            <p class="eyebrow">
+                VERIFICATION COMPLETE
+            </p>
+
+            <h1>
+                Access <span>Granted.</span>
+            </h1>
+
+            <p>
+                Your lecturer verification process
+                has been successfully completed.
+            </p>
+
+            <div class="terminal">
+                <span>></span> identity verified<br>
+                <span>></span> challenge completed<br>
+                <span>></span> invitation unlocked
+            </div>
+
+            <button class="primary-btn" onclick="openInvitation()">
+                OPEN INVITATION
+                <span>→</span>
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- INVITATION -->
+    <!-- ============================= -->
+
+    <section class="screen invitation-screen" id="invitation">
+
+        <div class="invitation-card">
+
+            <div class="invitation-top">
+                <span>BTR2020</span>
+                <span>2026</span>
+            </div>
+
+            <div class="invitation-symbol">
+                ✦
+            </div>
+
+            <p class="small-title">
+                YOU ARE CORDIALLY INVITED TO
+            </p>
+
+            <h1>
+                Creating a<br>
+                <span>Professional</span><br>
+                Portfolio Website
+            </h1>
+
+            <div class="divider"></div>
+
+            <p class="invitation-message">
+                Join us for a practical training programme
+                exploring how students can plan, design,
+                create and publish a professional portfolio
+                website.
+            </p>
+
+            <div class="details">
+
+                <div class="detail">
+                    <span class="detail-icon">◷</span>
+                    <div>
+                        <small>DATE</small>
+                        <strong>16 October 2026</strong>
+                    </div>
+                </div>
+
+                <div class="detail">
+                    <span class="detail-icon">◉</span>
+                    <div>
+                        <small>TIME</small>
+                        <strong>10:00 – 10:30</strong>
+                    </div>
+                </div>
+
+                <div class="detail">
+                    <span class="detail-icon">⌂</span>
+                    <div>
+                        <small>VENUE</small>
+                        <strong>Computer Lab 2</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="presenters">
+
+                <small>PRESENTED BY</small>
+
+                <p>
+                    Thabang Makgai • Lihle Mbeki •
+                    Amahle Jacobs
+                </p>
+
+            </div>
+
+            <button class="rsvp-btn" onclick="showRSVP()">
+                CONFIRM ATTENDANCE
+            </button>
+
+            <p class="footer-note">
+                We would be honoured to have you join us.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- RSVP -->
+    <!-- ============================= -->
+
+    <div class="modal" id="rsvpModal">
+
+        <div class="rsvp-card">
+
+            <button class="close" onclick="closeRSVP()">×</button>
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <p class="eyebrow">
+                INVITATION RECEIVED
+            </p>
+
+            <h2>
+                Thank you,
+                <span>Professor.</span>
+            </h2>
+
+            <p>
+                Your attendance has been noted.
+            </p>
+
+            <div class="rsvp-message">
+                We look forward to welcoming you
+                to the training programme.
+            </div>
+
+            <button class="primary-btn" onclick="closeRSVP()">
+                CLOSE
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
