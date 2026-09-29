@@ -4,11 +4,13 @@
    MASTER JAVASCRIPT
    ========================================================= */
 
+
 /* =========================================================
    01. GLOBAL STATE
    ========================================================= */
 
 const state = {
+
     currentLayer: "layerArrival",
 
     happiness: 42,
@@ -29,7 +31,12 @@ const state = {
 
     audioContext: null,
 
-    currentPanel: "panelIdea"
+    currentPanel: "panelIdea",
+
+    verificationRunning: false,
+
+    transitionLocked: false
+
 };
 
 
@@ -37,9 +44,11 @@ const state = {
    02. ELEMENT HELPERS
    ========================================================= */
 
-const $ = (selector) => document.querySelector(selector);
+const $ = (selector) =>
+    document.querySelector(selector);
 
-const $$ = (selector) => document.querySelectorAll(selector);
+const $$ = (selector) =>
+    document.querySelectorAll(selector);
 
 function get(id) {
     return document.getElementById(id);
@@ -51,6 +60,7 @@ function get(id) {
    ========================================================= */
 
 const layerOrder = [
+
     "layerArrival",
     "layerIdentity",
     "layerReveal",
@@ -64,6 +74,7 @@ const layerOrder = [
     "layerFinalVerification",
     "layerApproved",
     "layerWelcome"
+
 ];
 
 
@@ -71,11 +82,10 @@ const layerOrder = [
    04. INITIAL SETUP
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
-
-    initializeInvitation();
-
-});
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeInvitation
+);
 
 
 function initializeInvitation() {
@@ -98,6 +108,8 @@ function initializeInvitation() {
 
     setupInitialVisuals();
 
+    setupKeyboardAccess();
+
     updateProgress();
 
 }
@@ -110,18 +122,29 @@ function initializeInvitation() {
 function setupLayers() {
 
     $$(".layer").forEach(layer => {
+
         layer.classList.remove(
             "active",
             "is-active",
-            "show"
+            "show",
+            "exit"
         );
+
     });
 
-    const firstLayer = get(state.currentLayer);
+
+    const firstLayer =
+        get(state.currentLayer);
+
 
     if (firstLayer) {
-        firstLayer.classList.add("active");
+
+        firstLayer.classList.add(
+            "active"
+        );
+
     }
+
 }
 
 
@@ -131,21 +154,45 @@ function showLayer(layerId) {
         return;
     }
 
-    const nextLayer = get(layerId);
+
+    const nextLayer =
+        get(layerId);
+
 
     if (!nextLayer) {
+
         console.warn(
             `MonarchAurex: Layer "${layerId}" was not found.`
         );
 
         return;
+
     }
 
-    const currentLayer = get(state.currentLayer);
 
-    if (currentLayer && currentLayer !== nextLayer) {
+    if (
+        state.currentLayer ===
+        layerId
+    ) {
 
-        currentLayer.classList.add("exit");
+        return;
+
+    }
+
+
+    const currentLayer =
+        get(state.currentLayer);
+
+
+    if (
+        currentLayer &&
+        currentLayer !== nextLayer
+    ) {
+
+        currentLayer.classList.add(
+            "exit"
+        );
+
 
         setTimeout(() => {
 
@@ -156,13 +203,19 @@ function showLayer(layerId) {
                 "exit"
             );
 
-            activateLayer(nextLayer);
+
+            activateLayer(
+                nextLayer
+            );
 
         }, 420);
 
+
     } else {
 
-        activateLayer(nextLayer);
+        activateLayer(
+            nextLayer
+        );
 
     }
 
@@ -171,28 +224,53 @@ function showLayer(layerId) {
 
 function activateLayer(layer) {
 
-    document
-        .querySelectorAll(".layer")
-        .forEach(item => {
+    if (!layer) {
+        return;
+    }
 
-            item.classList.remove(
-                "active",
-                "is-active",
-                "show"
-            );
 
-        });
+    $$(".layer").forEach(item => {
 
-    layer.classList.add("active");
+        item.classList.remove(
+            "active",
+            "is-active",
+            "show",
+            "exit"
+        );
 
-    state.currentLayer = layer.id;
+    });
+
+
+    layer.classList.add(
+        "active"
+    );
+
+
+    state.currentLayer =
+        layer.id;
+
+
+    state.transitionLocked =
+        false;
+
 
     updateProgress();
+
 
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
+
+
+    if (
+        layer.id ===
+        "layerEnergy"
+    ) {
+
+        resetEnergyGame();
+
+    }
 
 }
 
@@ -203,35 +281,94 @@ function activateLayer(layer) {
 
 function updateProgress() {
 
-    const progressBar = $(".progress-bar");
+    const progressBar =
+        $(".progress-bar");
+
 
     if (!progressBar) {
         return;
     }
 
-    const index = layerOrder.indexOf(
-        state.currentLayer
-    );
+
+    const index =
+        layerOrder.indexOf(
+            state.currentLayer
+        );
+
 
     if (index === -1) {
-        progressBar.style.width = "0%";
+
+        progressBar.style.width =
+            "0%";
+
         return;
+
     }
 
+
     const progress =
-        (index / (layerOrder.length - 1)) * 100;
+        (index /
+            (layerOrder.length - 1)
+        ) * 100;
+
 
     progressBar.style.width =
-        `${Math.max(0, Math.min(progress, 100))}%`;
+        `${Math.max(
+            0,
+            Math.min(
+                progress,
+                100
+            )
+        )}%`;
 
 }
 
 
 /* =========================================================
-   07. MAIN BUTTONS
+   07. TRANSITION HELPER
+   ========================================================= */
+
+function safeTransition(
+    button,
+    callback,
+    delay = 0
+) {
+
+    if (state.transitionLocked) {
+        return;
+    }
+
+
+    state.transitionLocked =
+        true;
+
+
+    if (button) {
+
+        button.dataset.locked =
+            "true";
+
+        button.disabled =
+            true;
+
+    }
+
+
+    setTimeout(() => {
+
+        callback();
+
+    }, delay);
+
+}
+
+
+/* =========================================================
+   08. MAIN BUTTONS
    ========================================================= */
 
 function setupButtons() {
+
 
     /* -----------------------------------------
        ENTER INVITATION
@@ -240,15 +377,25 @@ function setupButtons() {
     const enterInvitation =
         get("enterInvitation");
 
+
     if (enterInvitation) {
 
         enterInvitation.addEventListener(
             "click",
             () => {
 
-                playClick();
+                safeTransition(
+                    enterInvitation,
+                    () => {
 
-                showLayer("layerIdentity");
+                        playClick();
+
+                        showLayer(
+                            "layerIdentity"
+                        );
+
+                    }
+                );
 
             }
         );
@@ -263,25 +410,39 @@ function setupButtons() {
     const confirmIdentity =
         get("confirmIdentity");
 
+
     if (confirmIdentity) {
 
         confirmIdentity.addEventListener(
             "click",
             () => {
 
-                state.identityConfirmed = true;
+                safeTransition(
+                    confirmIdentity,
+                    () => {
 
-                playSuccess();
+                        state.identityConfirmed =
+                            true;
 
-                showNotification(
-                    "Identity confirmed."
+
+                        playSuccess();
+
+
+                        showNotification(
+                            "Identity confirmed."
+                        );
+
+
+                        setTimeout(() => {
+
+                            showLayer(
+                                "layerReveal"
+                            );
+
+                        }, 700);
+
+                    }
                 );
-
-                setTimeout(() => {
-
-                    showLayer("layerReveal");
-
-                }, 700);
 
             }
         );
@@ -296,15 +457,25 @@ function setupButtons() {
     const discoverOpportunity =
         get("discoverOpportunity");
 
+
     if (discoverOpportunity) {
 
         discoverOpportunity.addEventListener(
             "click",
             () => {
 
-                playClick();
+                safeTransition(
+                    discoverOpportunity,
+                    () => {
 
-                showLayer("layerDiscovery");
+                        playClick();
+
+                        showLayer(
+                            "layerDiscovery"
+                        );
+
+                    }
+                );
 
             }
         );
@@ -319,17 +490,42 @@ function setupButtons() {
     const acceptInvitation =
         get("acceptInvitation");
 
+
     if (acceptInvitation) {
 
         acceptInvitation.addEventListener(
             "click",
             () => {
 
-                state.invitationAccepted = true;
+                if (
+                    !state.identityConfirmed
+                ) {
 
-                playClick();
+                    showNotification(
+                        "Identity confirmation is required first."
+                    );
 
-                showLayer("layerWait");
+                    return;
+
+                }
+
+
+                state.invitationAccepted =
+                    true;
+
+
+                safeTransition(
+                    acceptInvitation,
+                    () => {
+
+                        playClick();
+
+                        showLayer(
+                            "layerWait"
+                        );
+
+                    }
+                );
 
             }
         );
@@ -344,15 +540,39 @@ function setupButtons() {
     const startFunVerification =
         get("startFunVerification");
 
+
     if (startFunVerification) {
 
         startFunVerification.addEventListener(
             "click",
             () => {
 
-                playClick();
+                safeTransition(
+                    startFunVerification,
+                    () => {
 
-                showLayer("layerHappiness");
+                        if (
+                            !state.invitationAccepted
+                        ) {
+
+                            showNotification(
+                                "Invitation confirmation required."
+                            );
+
+                            return;
+
+                        }
+
+
+                        playClick();
+
+
+                        showLayer(
+                            "layerHappiness"
+                        );
+
+                    }
+                );
 
             }
         );
@@ -367,28 +587,46 @@ function setupButtons() {
     const happinessContinue =
         get("happinessContinue");
 
+
     if (happinessContinue) {
 
         happinessContinue.addEventListener(
             "click",
             () => {
 
-                if (state.happiness < 70) {
+                if (
+                    state.happiness < 70
+                ) {
 
                     showNotification(
                         "The system is still not convinced. Increase the happiness level first. 😭"
                     );
 
+
                     shakeElement(
-                        get("happinessSlider")
+                        get(
+                            "happinessSlider"
+                        )
                     );
 
+
                     return;
+
                 }
 
-                playSuccess();
 
-                showLayer("layerSmile");
+                safeTransition(
+                    happinessContinue,
+                    () => {
+
+                        playSuccess();
+
+                        showLayer(
+                            "layerSmile"
+                        );
+
+                    }
+                );
 
             }
         );
@@ -403,22 +641,50 @@ function setupButtons() {
     const enterMonarchAurex =
         get("enterMonarchAurex");
 
+
     if (enterMonarchAurex) {
 
         enterMonarchAurex.addEventListener(
             "click",
             () => {
 
-                playSuccess();
+                if (
+                    !state.finalApproved
+                ) {
 
-                createCelebration();
+                    showNotification(
+                        "Final approval has not been completed yet."
+                    );
 
-                setTimeout(() => {
+                    return;
 
-                    window.location.href =
-                        "https://monarchaurex.co.za/";
+                }
 
-                }, 850);
+
+                safeTransition(
+                    enterMonarchAurex,
+                    () => {
+
+                        playSuccess();
+
+
+                        createCelebration();
+
+
+                        showNotification(
+                            "Welcome to MonarchAurex, Lihle."
+                        );
+
+
+                        setTimeout(() => {
+
+                            window.location.href =
+                                "https://monarchaurex.co.za/";
+
+                        }, 1400);
+
+                    }
+                );
 
             }
         );
@@ -429,13 +695,19 @@ function setupButtons() {
 
 
 /* =========================================================
-   08. DISCOVERY SYSTEM
+   09. DISCOVERY SYSTEM
    ========================================================= */
 
 function setupDiscovery() {
 
+
+    /* -----------------------------------------
+       DISCOVERY CARDS
+       ----------------------------------------- */
+
     const cards =
         $$(".card-open");
+
 
     cards.forEach(card => {
 
@@ -446,11 +718,15 @@ function setupDiscovery() {
                 const panelId =
                     card.dataset.open;
 
+
                 if (!panelId) {
                     return;
                 }
 
-                openDiscovery(panelId);
+
+                openDiscovery(
+                    panelId
+                );
 
             }
         );
@@ -464,6 +740,7 @@ function setupDiscovery() {
 
     const closeDiscovery =
         get("closeDiscovery");
+
 
     if (closeDiscovery) {
 
@@ -479,53 +756,61 @@ function setupDiscovery() {
        PANEL NEXT
        ----------------------------------------- */
 
-    $$(".panel-next").forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                const nextPanel =
-                    button.dataset.nextPanel;
-
-                if (nextPanel) {
-
-                    openDiscovery(nextPanel);
-
-                }
-
-            }
-        );
-
-    });
-
-
-    /* -----------------------------------------
-       FINISH DISCOVERY
-       ----------------------------------------- */
-
-    $$("[data-finish-discovery]").forEach(
+    $$(".panel-next").forEach(
         button => {
 
             button.addEventListener(
                 "click",
                 () => {
 
-                    closeDiscoveryModal();
+                    const nextPanel =
+                        button.dataset.nextPanel;
 
-                    setTimeout(() => {
 
-                        showLayer(
-                            "layerFormalInvitation"
+                    if (
+                        nextPanel
+                    ) {
+
+                        openDiscovery(
+                            nextPanel
                         );
 
-                    }, 350);
+                    }
 
                 }
             );
 
         }
     );
+
+
+    /* -----------------------------------------
+       FINISH DISCOVERY
+       ----------------------------------------- */
+
+    $$(
+        "[data-finish-discovery]"
+    ).forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                closeDiscoveryModal();
+
+
+                setTimeout(() => {
+
+                    showLayer(
+                        "layerFormalInvitation"
+                    );
+
+                }, 350);
+
+            }
+        );
+
+    });
 
 
     /* -----------------------------------------
@@ -536,7 +821,10 @@ function setupDiscovery() {
         "keydown",
         event => {
 
-            if (event.key === "Escape") {
+            if (
+                event.key ===
+                "Escape"
+            ) {
 
                 closeDiscoveryModal();
 
@@ -553,6 +841,7 @@ function setupDiscovery() {
     const modal =
         get("discoveryModal");
 
+
     if (modal) {
 
         modal.addEventListener(
@@ -560,7 +849,8 @@ function setupDiscovery() {
             event => {
 
                 if (
-                    event.target === modal
+                    event.target ===
+                    modal
                 ) {
 
                     closeDiscoveryModal();
@@ -575,44 +865,63 @@ function setupDiscovery() {
 }
 
 
-function openDiscovery(panelId) {
+function openDiscovery(
+    panelId
+) {
 
     const modal =
         get("discoveryModal");
+
 
     if (!modal) {
         return;
     }
 
+
     const targetPanel =
         get(panelId);
 
+
     if (!targetPanel) {
+
+        console.warn(
+            `Discovery panel "${panelId}" was not found.`
+        );
+
         return;
+
     }
 
-    $$(".discovery-panel").forEach(
-        panel => {
+
+    $$(".discovery-panel")
+        .forEach(panel => {
 
             panel.classList.remove(
                 "active",
                 "show"
             );
 
-        }
+        });
+
+
+    targetPanel.classList.add(
+        "active"
     );
 
-    targetPanel.classList.add("active");
 
-    state.currentPanel = panelId;
+    state.currentPanel =
+        panelId;
+
 
     modal.classList.add(
         "active",
         "show"
     );
 
+
     document.body.style.overflow =
         "hidden";
+
 
     playClick();
 
@@ -624,14 +933,17 @@ function closeDiscoveryModal() {
     const modal =
         get("discoveryModal");
 
+
     if (!modal) {
         return;
     }
+
 
     modal.classList.remove(
         "active",
         "show"
     );
+
 
     document.body.style.overflow =
         "";
@@ -640,7 +952,7 @@ function closeDiscoveryModal() {
 
 
 /* =========================================================
-   09. HAPPINESS VERIFICATION
+   10. HAPPINESS VERIFICATION
    ========================================================= */
 
 function setupHappiness() {
@@ -648,21 +960,28 @@ function setupHappiness() {
     const slider =
         get("happinessSlider");
 
+
     if (!slider) {
         return;
     }
 
+
     state.happiness =
         Number(slider.value) || 42;
 
+
     updateHappiness();
+
 
     slider.addEventListener(
         "input",
         () => {
 
             state.happiness =
-                Number(slider.value);
+                Number(
+                    slider.value
+                );
+
 
             updateHappiness();
 
@@ -677,14 +996,18 @@ function updateHappiness() {
     const value =
         state.happiness;
 
+
     const slider =
         get("happinessSlider");
+
 
     const display =
         get("happinessValue");
 
+
     const meter =
         get("meterFill");
+
 
     const feedback =
         get("happinessFeedback");
@@ -692,7 +1015,8 @@ function updateHappiness() {
 
     if (slider) {
 
-        slider.value = value;
+        slider.value =
+            value;
 
     }
 
@@ -713,39 +1037,50 @@ function updateHappiness() {
     }
 
 
-    if (feedback) {
+    if (!feedback) {
+        return;
+    }
 
-        if (value < 45) {
 
-            feedback.textContent =
-                "Hmm... that is not exactly what we'd call enthusiasm. 😐";
+    if (value < 45) {
 
-        } else if (value < 60) {
+        feedback.textContent =
+            "Hmm... that is not exactly what we'd call enthusiasm. 😐";
 
-            feedback.textContent =
-                "Okay... we're seeing signs of life.";
+    }
 
-        } else if (value < 70) {
+    else if (value < 60) {
 
-            feedback.textContent =
-                "Better. But the MonarchAurex system remains suspicious.";
+        feedback.textContent =
+            "Okay... we're seeing signs of life.";
 
-        } else if (value < 85) {
+    }
 
-            feedback.textContent =
-                "Hmm... better. We're getting somewhere.";
+    else if (value < 70) {
 
-        } else if (value < 95) {
+        feedback.textContent =
+            "Better. But the MonarchAurex system remains suspicious.";
 
-            feedback.textContent =
-                "Now THAT looks more convincing.";
+    }
 
-        } else {
+    else if (value < 85) {
 
-            feedback.textContent =
-                "Maximum happiness detected. We may proceed. 😭🔥";
+        feedback.textContent =
+            "Hmm... better. We're getting somewhere.";
 
-        }
+    }
+
+    else if (value < 95) {
+
+        feedback.textContent =
+            "Now THAT looks more convincing.";
+
+    }
+
+    else {
+
+        feedback.textContent =
+            "Maximum happiness detected. We may proceed. 😭🔥";
 
     }
 
@@ -753,7 +1088,7 @@ function updateHappiness() {
 
 
 /* =========================================================
-   10. SMILE CHALLENGE
+   11. SMILE CHALLENGE
    ========================================================= */
 
 function setupSmileChallenge() {
@@ -761,20 +1096,33 @@ function setupSmileChallenge() {
     const smileButton =
         get("smileButton");
 
+
     if (!smileButton) {
         return;
     }
+
 
     smileButton.addEventListener(
         "click",
         () => {
 
-            state.smileConfirmed = true;
+            if (
+                state.smileConfirmed
+            ) {
+                return;
+            }
+
+
+            state.smileConfirmed =
+                true;
+
 
             playSuccess();
 
+
             const feedback =
                 get("smileFeedback");
+
 
             if (feedback) {
 
@@ -783,18 +1131,28 @@ function setupSmileChallenge() {
 
             }
 
+
             smileButton.textContent =
                 "SMILE VERIFIED ✓";
+
 
             smileButton.disabled =
                 true;
 
+
+            smileButton.dataset.locked =
+                "true";
+
+
             smileButton.style.opacity =
                 "0.7";
 
+
             setTimeout(() => {
 
-                showLayer("layerEnergy");
+                showLayer(
+                    "layerEnergy"
+                );
 
             }, 1200);
 
@@ -805,7 +1163,7 @@ function setupSmileChallenge() {
 
 
 /* =========================================================
-   11. ENERGY GAME
+   12. ENERGY GAME
    ========================================================= */
 
 function setupEnergyGame() {
@@ -813,24 +1171,15 @@ function setupEnergyGame() {
     const emblem =
         get("movingEmblem");
 
+
     const arena =
         get("energyArena");
+
 
     if (!emblem || !arena) {
         return;
     }
 
-
-    /* -----------------------------------------
-       INITIAL POSITION
-       ----------------------------------------- */
-
-    moveEnergyEmblem();
-
-
-    /* -----------------------------------------
-       CLICK EVENT
-       ----------------------------------------- */
 
     emblem.addEventListener(
         "click",
@@ -843,10 +1192,6 @@ function setupEnergyGame() {
         }
     );
 
-
-    /* -----------------------------------------
-       TOUCH SUPPORT
-       ----------------------------------------- */
 
     emblem.addEventListener(
         "touchstart",
@@ -862,22 +1207,105 @@ function setupEnergyGame() {
         }
     );
 
+
+    moveEnergyEmblem();
+
+}
+
+
+function resetEnergyGame() {
+
+    const emblem =
+        get("movingEmblem");
+
+
+    if (!emblem) {
+        return;
+    }
+
+
+    state.energyScore =
+        0;
+
+
+    const score =
+        get("energyScore");
+
+
+    const feedback =
+        get("energyFeedback");
+
+
+    if (score) {
+
+        score.textContent =
+            "0 / 5";
+
+    }
+
+
+    if (feedback) {
+
+        feedback.textContent =
+            "Catch the emblem 5 times.";
+
+    }
+
+
+    emblem.style.pointerEvents =
+        "auto";
+
+
+    emblem.style.opacity =
+        "1";
+
+
+    emblem.style.transform =
+        "scale(1)";
+
+
+    moveEnergyEmblem();
+
 }
 
 
 function energyHit() {
 
-    if (state.energyScore >= 5) {
+    if (
+        state.currentLayer !==
+        "layerEnergy"
+    ) {
+
         return;
+
     }
+
+
+    if (
+        state.energyScore >= 5
+    ) {
+
+        return;
+
+    }
+
 
     state.energyScore++;
 
+
     playClick();
+
 
     updateEnergyScore();
 
-    moveEnergyEmblem();
+
+    if (
+        state.energyScore < 5
+    ) {
+
+        moveEnergyEmblem();
+
+    }
 
 }
 
@@ -887,16 +1315,25 @@ function updateEnergyScore() {
     const score =
         get("energyScore");
 
+
     const feedback =
         get("energyFeedback");
 
+
     const messages = [
+
         "✦ Nice.",
+
         "✦ Okayyy.",
+
         "✦ You're getting serious.",
+
         "✦ THERE WE GO.",
+
         "✦ ENERGY CONFIRMED 🔥"
+
     ];
+
 
     if (score) {
 
@@ -905,35 +1342,43 @@ function updateEnergyScore() {
 
     }
 
+
     if (feedback) {
 
         feedback.textContent =
             messages[
-                Math.max(
-                    0,
-                    state.energyScore - 1
-                )
+                state.energyScore - 1
             ] || "";
 
     }
 
-    if (state.energyScore >= 5) {
+
+    if (
+        state.energyScore >= 5
+    ) {
 
         const emblem =
             get("movingEmblem");
+
 
         if (emblem) {
 
             emblem.style.pointerEvents =
                 "none";
 
+
             emblem.style.opacity =
                 "0";
+
 
             emblem.style.transform =
                 "scale(1.4)";
 
         }
+
+
+        playSuccess();
+
 
         setTimeout(() => {
 
@@ -953,55 +1398,69 @@ function moveEnergyEmblem() {
     const arena =
         get("energyArena");
 
+
     const emblem =
         get("movingEmblem");
+
 
     if (!arena || !emblem) {
         return;
     }
 
+
     const arenaWidth =
         arena.clientWidth;
+
 
     const arenaHeight =
         arena.clientHeight;
 
+
     const emblemWidth =
         emblem.offsetWidth || 64;
+
 
     const emblemHeight =
         emblem.offsetHeight || 64;
 
-    const padding = 35;
 
-    const maxX =
+    const padding =
+        35;
+
+
+    const availableWidth =
         Math.max(
-            padding,
+            1,
             arenaWidth -
             emblemWidth -
-            padding
+            padding * 2
         );
 
-    const maxY =
+
+    const availableHeight =
         Math.max(
-            padding,
+            1,
             arenaHeight -
             emblemHeight -
-            padding
+            padding * 2
         );
 
+
     const x =
+        padding +
         Math.random() *
-        (maxX - padding) +
-        padding;
+        availableWidth;
+
 
     const y =
+        padding +
         Math.random() *
-        (maxY - padding) +
-        padding;
+        availableHeight;
+
 
     emblem.style.left =
         `${x}px`;
+
 
     emblem.style.top =
         `${y}px`;
@@ -1010,7 +1469,7 @@ function moveEnergyEmblem() {
 
 
 /* =========================================================
-   12. VIBE QUESTION
+   13. VIBE QUESTION
    ========================================================= */
 
 function setupVibeQuestion() {
@@ -1018,9 +1477,11 @@ function setupVibeQuestion() {
     const options =
         $$(".vibe-option");
 
+
     if (!options.length) {
         return;
     }
+
 
     options.forEach(option => {
 
@@ -1028,15 +1489,27 @@ function setupVibeQuestion() {
             "click",
             () => {
 
-                if (state.vibeAnswered) {
+                if (
+                    state.vibeAnswered
+                ) {
+
                     return;
+
                 }
+
 
                 const answer =
                     option.dataset.answer;
 
+
+                if (!answer) {
+                    return;
+                }
+
+
                 state.vibeAnswered =
                     true;
+
 
                 options.forEach(item => {
 
@@ -1044,11 +1517,17 @@ function setupVibeQuestion() {
                         "selected"
                     );
 
+
+                    item.disabled =
+                        true;
+
                 });
+
 
                 option.classList.add(
                     "selected"
                 );
+
 
                 handleVibeAnswer(
                     answer
@@ -1062,13 +1541,17 @@ function setupVibeQuestion() {
 }
 
 
-function handleVibeAnswer(answer) {
+function handleVibeAnswer(
+    answer
+) {
 
     const feedback =
         get("vibeFeedback");
 
+
     let message =
         "";
+
 
     switch (answer) {
 
@@ -1079,12 +1562,14 @@ function handleVibeAnswer(answer) {
 
             break;
 
+
         case "B":
 
             message =
                 "Energy detected. Respect. 🔥";
 
             break;
+
 
         case "C":
 
@@ -1093,12 +1578,14 @@ function handleVibeAnswer(answer) {
 
             break;
 
+
         case "D":
 
             message =
                 "CORRECT. Finally, someone understands the assignment. 😭🔥";
 
             break;
+
 
         default:
 
@@ -1107,6 +1594,7 @@ function handleVibeAnswer(answer) {
 
     }
 
+
     if (feedback) {
 
         feedback.textContent =
@@ -1114,15 +1602,32 @@ function handleVibeAnswer(answer) {
 
     }
 
+
     playSuccess();
+
 
     setTimeout(() => {
 
-        showLayer(
-            "layerFinalVerification"
-        );
+        if (
+            verifyAllRequirements()
+        ) {
 
-        runFinalVerification();
+            showLayer(
+                "layerFinalVerification"
+            );
+
+
+            runFinalVerification();
+
+        }
+
+        else {
+
+            showNotification(
+                "Verification requirements are incomplete."
+            );
+
+        }
 
     }, 1400);
 
@@ -1130,63 +1635,133 @@ function handleVibeAnswer(answer) {
 
 
 /* =========================================================
-   13. FINAL VERIFICATION
+   14. REQUIREMENT CHECK
+   ========================================================= */
+
+function verifyAllRequirements() {
+
+    return (
+
+        state.identityConfirmed &&
+
+        state.invitationAccepted &&
+
+        state.happiness >= 70 &&
+
+        state.smileConfirmed &&
+
+        state.energyScore >= 5 &&
+
+        state.vibeAnswered
+
+    );
+
+}
+
+
+/* =========================================================
+   15. FINAL VERIFICATION
    ========================================================= */
 
 function runFinalVerification() {
 
+    if (
+        state.verificationRunning
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !verifyAllRequirements()
+    ) {
+
+        showNotification(
+            "Verification incomplete."
+        );
+
+        return;
+
+    }
+
+
+    state.verificationRunning =
+        true;
+
+
+    state.finalApproved =
+        false;
+
+
     const checks = [
+
         {
             id: "verifyIdentity",
             delay: 400
         },
+
         {
             id: "verifyInvitation",
             delay: 900
         },
+
         {
             id: "verifyEnergy",
             delay: 1400
         },
+
         {
             id: "verifyHappiness",
             delay: 1900
         },
+
         {
             id: "verifyVibes",
             delay: 2400
         },
+
         {
             id: "verifyCommitment",
             delay: 2900
         }
+
     ];
+
 
     checks.forEach(check => {
 
         const element =
             get(check.id);
 
+
         if (!element) {
             return;
         }
 
+
         element.style.opacity =
             "0";
 
+
         element.style.transform =
             "translateX(-10px)";
+
+
+        element.style.transition =
+            "all 0.4s ease";
+
 
         setTimeout(() => {
 
             element.style.opacity =
                 "1";
 
+
             element.style.transform =
                 "translateX(0)";
 
-            element.style.transition =
-                "all 0.4s ease";
 
             playTerminalTick();
 
@@ -1198,17 +1773,26 @@ function runFinalVerification() {
     setTimeout(() => {
 
         const status =
-            get("verificationStatus");
+            get(
+                "verificationStatus"
+            );
+
 
         if (status) {
 
             status.textContent =
                 "STATUS: APPROVED";
 
+
             status.style.color =
                 "var(--success)";
 
         }
+
+
+        state.finalApproved =
+            true;
+
 
         playSuccess();
 
@@ -1217,9 +1801,20 @@ function runFinalVerification() {
 
     setTimeout(() => {
 
-        showLayer(
-            "layerApproved"
-        );
+        if (
+            state.finalApproved
+        ) {
+
+            showLayer(
+                "layerApproved"
+            );
+
+        }
+
+
+        state.verificationRunning =
+            false;
+
 
     }, 4300);
 
@@ -1227,7 +1822,7 @@ function runFinalVerification() {
 
 
 /* =========================================================
-   14. APPROVAL SCREEN
+   16. APPROVAL SCREEN
    ========================================================= */
 
 function setupApprovalScreen() {
@@ -1235,15 +1830,26 @@ function setupApprovalScreen() {
     const approvalLayer =
         get("layerApproved");
 
+
     if (!approvalLayer) {
         return;
     }
+
+
+    /*
+     * Approval is controlled by
+     * runFinalVerification().
+     *
+     * This function exists as a
+     * dedicated hook for future
+     * approval-screen behaviour.
+     */
 
 }
 
 
 /* =========================================================
-   15. CELEBRATION
+   17. CELEBRATION
    ========================================================= */
 
 function createCelebration() {
@@ -1251,15 +1857,34 @@ function createCelebration() {
     const container =
         get("celebrationLayer");
 
+
     if (!container) {
         return;
     }
 
+
     container.innerHTML =
         "";
 
+
     const pieces =
         90;
+
+
+    const colours = [
+
+        "#C7A45B",
+
+        "#D7BD82",
+
+        "#F5F5F5",
+
+        "#98A4B8",
+
+        "#76531F"
+
+    ];
+
 
     for (
         let i = 0;
@@ -1272,36 +1897,36 @@ function createCelebration() {
                 "span"
             );
 
+
         piece.className =
             "confetti";
+
 
         piece.style.left =
             `${Math.random() * 100}%`;
 
+
         piece.style.animationDelay =
             `${Math.random() * 1.2}s`;
 
+
         piece.style.animationDuration =
-            `${2.5 + Math.random() * 2.2}s`;
+            `${2.5 +
+                Math.random() * 2.2
+            }s`;
+
 
         piece.style.width =
-            `${4 + Math.random() * 6}px`;
+            `${4 +
+                Math.random() * 6
+            }px`;
+
 
         piece.style.height =
-            `${8 + Math.random() * 12}px`;
+            `${8 +
+                Math.random() * 12
+            }px`;
 
-        /*
-         * Random premium colours.
-         * Kept inside JS so the CSS remains clean.
-         */
-
-        const colours = [
-            "#C7A45B",
-            "#D7BD82",
-            "#F5F5F5",
-            "#98A4B8",
-            "#76531F"
-        ];
 
         piece.style.background =
             colours[
@@ -1311,14 +1936,19 @@ function createCelebration() {
                 )
             ];
 
+
         piece.style.transform =
-            `rotate(${Math.random() * 360}deg)`;
+            `rotate(
+                ${Math.random() * 360}deg
+            )`;
+
 
         container.appendChild(
             piece
         );
 
     }
+
 
     setTimeout(() => {
 
@@ -1331,30 +1961,39 @@ function createCelebration() {
 
 
 /* =========================================================
-   16. NOTIFICATIONS
+   18. NOTIFICATIONS
    ========================================================= */
 
-let notificationTimeout = null;
+let notificationTimeout =
+    null;
 
-function showNotification(message) {
+
+function showNotification(
+    message
+) {
 
     const notification =
         get("systemNotification");
+
 
     if (!notification) {
         return;
     }
 
+
     notification.textContent =
         message;
+
 
     notification.classList.add(
         "show"
     );
 
+
     clearTimeout(
         notificationTimeout
     );
+
 
     notificationTimeout =
         setTimeout(() => {
@@ -1369,47 +2008,70 @@ function showNotification(message) {
 
 
 /* =========================================================
-   17. SHAKE EFFECT
+   19. SHAKE EFFECT
    ========================================================= */
 
-function shakeElement(element) {
+function shakeElement(
+    element
+) {
 
     if (!element) {
         return;
     }
 
+
     element.animate(
+
         [
+
             {
-                transform: "translateX(0)"
+                transform:
+                    "translateX(0)"
             },
+
             {
-                transform: "translateX(-8px)"
+                transform:
+                    "translateX(-8px)"
             },
+
             {
-                transform: "translateX(8px)"
+                transform:
+                    "translateX(8px)"
             },
+
             {
-                transform: "translateX(-6px)"
+                transform:
+                    "translateX(-6px)"
             },
+
             {
-                transform: "translateX(6px)"
+                transform:
+                    "translateX(6px)"
             },
+
             {
-                transform: "translateX(0)"
+                transform:
+                    "translateX(0)"
             }
+
         ],
+
         {
+
             duration: 420,
-            easing: "ease-out"
+
+            easing:
+                "ease-out"
+
         }
+
     );
 
 }
 
 
 /* =========================================================
-   18. SOUND SYSTEM
+   20. SOUND SYSTEM
    ========================================================= */
 
 function setupSound() {
@@ -1417,9 +2079,11 @@ function setupSound() {
     const soundControl =
         get("soundControl");
 
+
     if (!soundControl) {
         return;
     }
+
 
     soundControl.addEventListener(
         "click",
@@ -1428,9 +2092,13 @@ function setupSound() {
             state.soundEnabled =
                 !state.soundEnabled;
 
+
             updateSoundButton();
 
-            if (state.soundEnabled) {
+
+            if (
+                state.soundEnabled
+            ) {
 
                 initializeAudio();
 
@@ -1440,6 +2108,7 @@ function setupSound() {
 
         }
     );
+
 
     updateSoundButton();
 
@@ -1451,24 +2120,31 @@ function updateSoundButton() {
     const button =
         get("soundControl");
 
+
     if (!button) {
         return;
     }
 
-    if (state.soundEnabled) {
+
+    if (
+        state.soundEnabled
+    ) {
 
         button.textContent =
             "🔊";
+
 
         button.setAttribute(
             "aria-label",
             "Mute sound"
         );
 
+
     } else {
 
         button.textContent =
             "🔇";
+
 
         button.setAttribute(
             "aria-label",
@@ -1482,9 +2158,14 @@ function updateSoundButton() {
 
 function initializeAudio() {
 
-    if (state.audioContext) {
+    if (
+        state.audioContext
+    ) {
+
         return;
+
     }
+
 
     try {
 
@@ -1492,12 +2173,15 @@ function initializeAudio() {
             window.AudioContext ||
             window.webkitAudioContext;
 
+
         if (!AudioContext) {
             return;
         }
 
+
         state.audioContext =
             new AudioContext();
+
 
     } catch (error) {
 
@@ -1512,24 +2196,41 @@ function initializeAudio() {
 
 
 function playTone(
+
     frequency = 440,
+
     duration = 0.08,
+
     type = "sine",
+
     volume = 0.025
+
 ) {
 
-    if (!state.soundEnabled) {
+    if (
+        !state.soundEnabled
+    ) {
+
         return;
+
     }
+
 
     initializeAudio();
 
-    if (!state.audioContext) {
+
+    if (
+        !state.audioContext
+    ) {
+
         return;
+
     }
+
 
     const context =
         state.audioContext;
+
 
     if (
         context.state ===
@@ -1540,60 +2241,91 @@ function playTone(
 
     }
 
+
     const oscillator =
         context.createOscillator();
+
 
     const gain =
         context.createGain();
 
+
     oscillator.type =
         type;
+
 
     oscillator.frequency.value =
         frequency;
 
+
     gain.gain.setValueAtTime(
+
         0,
+
         context.currentTime
+
     );
+
 
     gain.gain.linearRampToValueAtTime(
+
         volume,
-        context.currentTime + 0.01
+
+        context.currentTime +
+        0.01
+
     );
+
 
     gain.gain.exponentialRampToValueAtTime(
+
         0.001,
-        context.currentTime + duration
+
+        context.currentTime +
+        duration
+
     );
 
-    oscillator.connect(gain);
+
+    oscillator.connect(
+        gain
+    );
+
 
     gain.connect(
         context.destination
     );
 
+
     oscillator.start();
 
+
     oscillator.stop(
+
         context.currentTime +
         duration
+
     );
 
 }
 
 
 /* =========================================================
-   19. SOUND EVENTS
+   21. SOUND EVENTS
    ========================================================= */
 
 function playClick() {
 
     playTone(
+
         520,
+
         0.06,
+
         "sine",
+
         0.02
+
     );
 
 }
@@ -1601,35 +2333,57 @@ function playClick() {
 
 function playSuccess() {
 
-    if (!state.soundEnabled) {
+    if (
+        !state.soundEnabled
+    ) {
+
         return;
+
     }
 
+
     playTone(
+
         523.25,
+
         0.09,
+
         "sine",
+
         0.025
+
     );
+
 
     setTimeout(() => {
 
         playTone(
+
             659.25,
+
             0.11,
+
             "sine",
+
             0.025
+
         );
 
     }, 80);
 
+
     setTimeout(() => {
 
         playTone(
+
             783.99,
+
             0.16,
+
             "sine",
+
             0.025
+
         );
 
     }, 160);
@@ -1640,17 +2394,22 @@ function playSuccess() {
 function playTerminalTick() {
 
     playTone(
+
         760,
+
         0.035,
+
         "square",
+
         0.012
+
     );
 
 }
 
 
 /* =========================================================
-   20. INITIAL VISUALS
+   22. INITIAL VISUALS
    ========================================================= */
 
 function setupInitialVisuals() {
@@ -1658,12 +2417,14 @@ function setupInitialVisuals() {
     const arrival =
         get("layerArrival");
 
+
     if (arrival) {
 
         const content =
             arrival.querySelector(
                 ".layer-content"
             );
+
 
         if (content) {
 
@@ -1677,58 +2438,66 @@ function setupInitialVisuals() {
 
 
     /*
-     * Give buttons a small interaction
-     * without changing their actual logic.
+     * Button press interaction.
      */
 
-    $$("button").forEach(button => {
+    $$("button").forEach(
+        button => {
 
-        button.addEventListener(
-            "pointerdown",
-            () => {
+            button.addEventListener(
+                "pointerdown",
+                () => {
 
-                if (
-                    button.disabled
-                ) {
-                    return;
+                    if (
+                        button.disabled
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    button.style.transform =
+                        "scale(0.98)";
+
                 }
+            );
 
-                button.style.transform =
-                    "scale(0.98)";
 
-            }
-        );
+            button.addEventListener(
+                "pointerup",
+                () => {
 
-        button.addEventListener(
-            "pointerup",
-            () => {
+                    button.style.transform =
+                        "";
 
-                button.style.transform =
-                    "";
+                }
+            );
 
-            }
-        );
 
-        button.addEventListener(
-            "pointerleave",
-            () => {
+            button.addEventListener(
+                "pointerleave",
+                () => {
 
-                button.style.transform =
-                    "";
+                    button.style.transform =
+                        "";
 
-            }
-        );
+                }
+            );
 
-    });
+        }
+    );
 
 }
 
 
 /* =========================================================
-   21. RESIZE HANDLING
+   23. RESIZE HANDLING
    ========================================================= */
 
-let resizeTimeout = null;
+let resizeTimeout =
+    null;
+
 
 window.addEventListener(
     "resize",
@@ -1737,6 +2506,7 @@ window.addEventListener(
         clearTimeout(
             resizeTimeout
         );
+
 
         resizeTimeout =
             setTimeout(() => {
@@ -1757,24 +2527,28 @@ window.addEventListener(
 
 
 /* =========================================================
-   22. KEYBOARD ACCESS
+   24. KEYBOARD ACCESS
    ========================================================= */
 
-document.addEventListener(
-    "keydown",
-    event => {
+function setupKeyboardAccess() {
 
-        /*
-         * ENTER can activate focused buttons.
-         */
+    document.addEventListener(
+        "keydown",
+        event => {
 
-        if (
-            event.key ===
-            "Enter"
-        ) {
+            if (
+                event.key !==
+                "Enter"
+            ) {
+
+                return;
+
+            }
+
 
             const active =
                 document.activeElement;
+
 
             if (
                 active &&
@@ -1787,13 +2561,13 @@ document.addEventListener(
             }
 
         }
+    );
 
-    }
-);
+}
 
 
 /* =========================================================
-   23. PREVENT ACCIDENTAL DOUBLE SUBMISSION
+   25. DOUBLE-CLICK PROTECTION
    ========================================================= */
 
 document.addEventListener(
@@ -1805,9 +2579,11 @@ document.addEventListener(
                 "button"
             );
 
+
         if (!button) {
             return;
         }
+
 
         if (
             button.dataset.locked ===
@@ -1823,84 +2599,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   24. APPROVAL SAFETY
-   ========================================================= */
-
-function verifyAllRequirements() {
-
-    return (
-        state.identityConfirmed &&
-        state.invitationAccepted &&
-        state.happiness >= 70 &&
-        state.smileConfirmed &&
-        state.energyScore >= 5 &&
-        state.vibeAnswered
-    );
-
-}
-
-
-/* =========================================================
-   25. FINAL APPROVAL GUARD
-   ========================================================= */
-
-const originalRunFinalVerification =
-    runFinalVerification;
-
-
-/*
- * We deliberately keep the verification
- * sequence behind a complete requirement check.
- */
-
-function secureFinalVerification() {
-
-    if (
-        !verifyAllRequirements()
-    ) {
-
-        showNotification(
-            "Verification incomplete."
-        );
-
-        return;
-
-    }
-
-    originalRunFinalVerification();
-
-}
-
-
-/* =========================================================
-   26. SPECIAL MOBILE TOUCH BEHAVIOUR
-   ========================================================= */
-
-document.addEventListener(
-    "touchmove",
-    event => {
-
-        /*
-         * Do not interfere with normal
-         * page scrolling.
-         */
-
-        if (
-            state.currentLayer !==
-            "layerEnergy"
-        ) {
-            return;
-        }
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* =========================================================
-   27. PAGE VISIBILITY
+   26. PAGE VISIBILITY
    ========================================================= */
 
 document.addEventListener(
@@ -1932,10 +2631,11 @@ document.addEventListener(
 
 
 /* =========================================================
-   28. DEBUG INFORMATION
+   27. DEBUG / PUBLIC API
    ========================================================= */
 
 window.MonarchAurexInvitation = {
+
     state,
 
     showLayer,
@@ -1948,12 +2648,17 @@ window.MonarchAurexInvitation = {
 
     createCelebration,
 
-    moveEnergyEmblem
+    moveEnergyEmblem,
+
+    runFinalVerification,
+
+    verifyAllRequirements
+
 };
 
 
 /* =========================================================
-   29. READY
+   28. CONSOLE BRANDING
    ========================================================= */
 
 console.log(
@@ -1961,10 +2666,12 @@ console.log(
     "font-size:24px;font-weight:bold;color:#C7A45B;"
 );
 
+
 console.log(
     "%cPrivate invitation system initialized.",
     "font-size:12px;color:#98A4B8;"
 );
+
 
 console.log(
     "%cLIHLE × MONARCHAUREX",
