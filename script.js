@@ -1,6 +1,6 @@
 /* =========================================================
    PORTFOLIO WEB DEVELOPMENT TRAINING
-   Interactive Invitation
+   CRS INVITATION EXPERIENCE
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,8 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const $$ = (selector) => document.querySelectorAll(selector);
 
 
-    function delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    function delay(milliseconds) {
+        return new Promise(resolve => {
+            setTimeout(resolve, milliseconds);
+        });
     }
 
 
@@ -49,14 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
             layer.classList.remove("active");
         });
 
-        const targetLayer = document.getElementById(layerId);
+        const target = document.getElementById(layerId);
 
-        if (!targetLayer) {
+        if (!target) {
             console.warn(`Layer not found: ${layerId}`);
             return;
         }
 
-        targetLayer.classList.add("active");
+        target.classList.add("active");
 
         state.currentLayer = layerId;
 
@@ -68,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       NOTIFICATIONS
+       NOTIFICATION
     ====================================================== */
 
     const notification = $("#systemNotification");
@@ -90,7 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
         clearTimeout(notificationTimer);
 
         notificationTimer = setTimeout(() => {
+
             notification.classList.remove("show");
+
         }, duration);
     }
 
@@ -101,19 +105,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const enterInvitation = $("#enterInvitation");
 
+
     if (enterInvitation) {
 
         enterInvitation.addEventListener("click", async () => {
 
             enterInvitation.disabled = true;
 
-            showNotification("Let's start with something simple.");
+            showNotification(
+                "Let's start with something small."
+            );
 
-            await delay(500);
+            await delay(450);
 
             showLayer("layerChallengeOne");
 
             enterInvitation.disabled = false;
+
         });
 
     }
@@ -123,8 +131,11 @@ document.addEventListener("DOMContentLoaded", () => {
        02 — QUICK WEB CHALLENGE
     ====================================================== */
 
-    const challengeOneOptions = $$("#challengeOneOptions .answer-option");
-    const challengeOneFeedback = $("#challengeOneFeedback");
+    const challengeOneOptions =
+        $$("#challengeOneOptions .answer-option");
+
+    const challengeOneFeedback =
+        $("#challengeOneFeedback");
 
 
     challengeOneOptions.forEach(option => {
@@ -149,11 +160,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 option.classList.add("wrong");
 
                 if (challengeOneFeedback) {
+
                     challengeOneFeedback.textContent =
                         "Not quite. Try again.";
+
                 }
 
-                showNotification("Almost. Try again.");
+                showNotification(
+                    "Try again."
+                );
 
                 return;
             }
@@ -169,16 +184,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 button.disabled = true;
             });
 
+
             if (challengeOneFeedback) {
+
                 challengeOneFeedback.textContent =
-                    "Correct. HTML gives the page its structure.";
+                    "Correct. HTML gives a webpage its structure.";
+
             }
 
-            showNotification("Correct ✓");
+            showNotification(
+                "Correct ✓"
+            );
 
             await delay(900);
 
             showLayer("layerChallengeTwo");
+
         });
 
     });
@@ -188,38 +209,51 @@ document.addEventListener("DOMContentLoaded", () => {
        03 — BUILD THE PAGE
     ====================================================== */
 
-    const sequenceOptions = $$(".sequence-option");
-    const sequenceSlots = $$("#sequenceSlots .sequence-slot");
-    const sequenceFeedback = $("#challengeTwoFeedback");
-    const continueAfterSequence = $("#continueAfterSequence");
+    const sequenceOptions =
+        $$(".sequence-option");
+
+    const sequenceSlots =
+        $$("#sequenceSlots .sequence-slot");
+
+    const sequenceFeedback =
+        $("#challengeTwoFeedback");
+
+    const continueAfterSequence =
+        $("#continueAfterSequence");
 
 
     function resetSequence() {
 
         state.sequenceAnswers = [];
 
+
         sequenceSlots.forEach(slot => {
 
             slot.classList.remove("filled");
 
-            const strong = slot.querySelector("strong");
+            const label =
+                slot.querySelector("strong");
 
-            if (strong) {
-                strong.textContent = "Choose one";
+            if (label) {
+                label.textContent = "Choose one";
             }
 
         });
 
+
         sequenceOptions.forEach(option => {
 
             option.classList.remove("selected");
+
             option.disabled = false;
 
         });
 
+
         if (continueAfterSequence) {
             continueAfterSequence.classList.add("hidden");
         }
+
     }
 
 
@@ -227,27 +261,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
         sequenceSlots.forEach((slot, index) => {
 
-            const strong = slot.querySelector("strong");
+            const label =
+                slot.querySelector("strong");
 
-            if (!strong) {
+            if (!label) {
                 return;
             }
 
-            if (state.sequenceAnswers[index]) {
 
-                strong.textContent =
-                    state.sequenceAnswers[index];
+            const answer =
+                state.sequenceAnswers[index];
+
+
+            if (answer) {
+
+                label.textContent = answer;
 
                 slot.classList.add("filled");
 
             } else {
 
-                strong.textContent = "Choose one";
+                label.textContent = "Choose one";
 
                 slot.classList.remove("filled");
+
             }
 
         });
+
     }
 
 
@@ -259,7 +300,8 @@ document.addEventListener("DOMContentLoaded", () => {
             "JavaScript"
         ];
 
-        const isCorrect =
+
+        const correct =
             state.sequenceAnswers.length === 3 &&
             state.sequenceAnswers.every(
                 (answer, index) =>
@@ -267,14 +309,18 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
 
-        if (!isCorrect) {
+        if (!correct) {
 
             if (sequenceFeedback) {
+
                 sequenceFeedback.textContent =
-                    "Not quite. Think: structure → style → behaviour.";
+                    "Not quite. Think: structure → styling → behaviour.";
+
             }
 
-            showNotification("That order needs another try.");
+            showNotification(
+                "Let's try that order again."
+            );
 
             await delay(700);
 
@@ -284,20 +330,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /* Correct sequence */
+        /* Correct */
 
         state.sequenceComplete = true;
 
+
         if (sequenceFeedback) {
+
             sequenceFeedback.textContent =
                 "Perfect. HTML → CSS → JavaScript.";
+
         }
 
-        showNotification("Sequence complete ✓");
+
+        showNotification(
+            "Sequence complete ✓"
+        );
+
 
         sequenceOptions.forEach(option => {
             option.disabled = true;
         });
+
 
         if (continueAfterSequence) {
             continueAfterSequence.classList.remove("hidden");
@@ -314,21 +368,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const language = option.dataset.language;
+
+            const language =
+                option.dataset.language;
+
 
             if (!language) {
                 return;
             }
 
 
-            /* Prevent duplicate selection */
+            /* Prevent duplicate choices */
 
-            if (state.sequenceAnswers.includes(language)) {
+            if (
+                state.sequenceAnswers.includes(language)
+            ) {
                 return;
             }
 
-
-            /* Add answer */
 
             state.sequenceAnswers.push(language);
 
@@ -339,10 +396,12 @@ document.addEventListener("DOMContentLoaded", () => {
             updateSequenceSlots();
 
 
-            /* Check once three answers are selected */
+            if (
+                state.sequenceAnswers.length === 3
+            ) {
 
-            if (state.sequenceAnswers.length === 3) {
                 await checkSequence();
+
             }
 
         });
@@ -352,19 +411,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (continueAfterSequence) {
 
-        continueAfterSequence.addEventListener("click", async () => {
+        continueAfterSequence.addEventListener(
+            "click",
+            async () => {
 
-            if (!state.sequenceComplete) {
-                return;
+                if (!state.sequenceComplete) {
+                    return;
+                }
+
+                showNotification(
+                    "Now let's talk about ONE LINK."
+                );
+
+                await delay(450);
+
+                showLayer("layerOneLink");
+
             }
-
-            showNotification("Now let's talk about ONE LINK.");
-
-            await delay(450);
-
-            showLayer("layerOneLink");
-
-        });
+        );
 
     }
 
@@ -373,8 +437,11 @@ document.addEventListener("DOMContentLoaded", () => {
        04 — ONE LINK
     ====================================================== */
 
-    const oneLinkChoices = $$("#oneLinkChoices .choice-card");
-    const oneLinkFeedback = $("#oneLinkFeedback");
+    const oneLinkChoices =
+        $$("#oneLinkChoices .choice-card");
+
+    const oneLinkFeedback =
+        $("#oneLinkFeedback");
 
 
     oneLinkChoices.forEach(choice => {
@@ -385,13 +452,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const selectedChoice = choice.dataset.choice;
+
+            const selectedChoice =
+                choice.dataset.choice;
+
 
             state.oneLinkComplete = true;
+
 
             oneLinkChoices.forEach(card => {
                 card.disabled = true;
             });
+
 
             choice.classList.add("selected");
 
@@ -399,29 +471,39 @@ document.addEventListener("DOMContentLoaded", () => {
             if (selectedChoice === "yes") {
 
                 if (oneLinkFeedback) {
+
                     oneLinkFeedback.textContent =
                         "Exactly. One link can bring your professional identity together.";
+
                 }
 
             } else if (selectedChoice === "maybe") {
 
                 if (oneLinkFeedback) {
+
                     oneLinkFeedback.textContent =
-                        "Fair enough. That's exactly what the training is about.";
+                        "Fair enough. Let's show you what we mean.";
+
                 }
 
             } else {
 
                 if (oneLinkFeedback) {
+
                     oneLinkFeedback.textContent =
-                        "Good. Let's show you where we're going with it.";
+                        "Good. Let's show you what we mean.";
+
                 }
 
             }
 
-            showNotification("Good choice.");
 
-            await delay(1200);
+            showNotification(
+                "Good choice."
+            );
+
+
+            await delay(1100);
 
             showLayer("layerAccessGranted");
 
@@ -434,20 +516,26 @@ document.addEventListener("DOMContentLoaded", () => {
        05 — ACCESS GRANTED
     ====================================================== */
 
-    const viewInvitation = $("#viewInvitation");
+    const viewInvitation =
+        $("#viewInvitation");
 
 
     if (viewInvitation) {
 
-        viewInvitation.addEventListener("click", async () => {
+        viewInvitation.addEventListener(
+            "click",
+            async () => {
 
-            showNotification("Opening the actual invitation...");
+                showNotification(
+                    "Opening the invitation..."
+                );
 
-            await delay(450);
+                await delay(400);
 
-            showLayer("layerInvitation");
+                showLayer("layerInvitation");
 
-        });
+            }
+        );
 
     }
 
@@ -456,112 +544,64 @@ document.addEventListener("DOMContentLoaded", () => {
        06 — ACTUAL INVITATION
     ====================================================== */
 
-    const viewDetails = $("#viewDetails");
+    const viewDetails =
+        $("#viewDetails");
 
 
     if (viewDetails) {
 
-        viewDetails.addEventListener("click", async () => {
+        viewDetails.addEventListener(
+            "click",
+            async () => {
 
-            showNotification("Here are the details.");
+                showNotification(
+                    "Here are the event details."
+                );
 
-            await delay(400);
+                await delay(400);
 
-            showLayer("layerDetails");
+                showLayer("layerDetails");
 
-        });
+            }
+        );
 
     }
 
 
     /* =====================================================
        07 — EVENT DETAILS
+       
+       There is NO RSVP stage here.
+
+       The user continues to the final mini-game.
     ====================================================== */
 
-    const goToRsvp = $("#goToRsvp");
-
-
-    if (goToRsvp) {
-
-        goToRsvp.addEventListener("click", async () => {
-
-            showNotification("Your RSVP is one click away.");
-
-            await delay(400);
-
-            showLayer("layerRsvp");
-
-        });
-
-    }
-
-
-    /* =====================================================
-       08 — RSVP
-       
-       IMPORTANT:
-       The actual RSVP button is a mailto link in the HTML.
-
-       JavaScript does NOT submit anything here.
-
-       Clicking it opens the user's email app with:
-       
-       TO:
-       s225014696@mandela.ac.za
-
-       CC:
-       s227264398@mandela.ac.za
-
-       SUBJECT:
-       RSVP – Portfolio Web Development Training
-
-       BODY:
-       Empty
-    ====================================================== */
-
-    const rsvpButton = $("#rsvpButton");
-
-
-    if (rsvpButton) {
-
-        rsvpButton.addEventListener("click", () => {
-
-            showNotification(
-                "Opening your email app..."
-            );
-
-        });
-
-    }
-
-
-    /* =====================================================
-       09 — AFTER RSVP
-       
-       This screen does NOT claim the RSVP was confirmed.
-       The actual confirmation happens when the email is sent.
-    ====================================================== */
-
-    const continueToFinalGame = $("#continueToFinalGame");
+    const continueToFinalGame =
+        $("#continueToFinalGame");
 
 
     if (continueToFinalGame) {
 
-        continueToFinalGame.addEventListener("click", async () => {
+        continueToFinalGame.addEventListener(
+            "click",
+            async () => {
 
-            showNotification("One last challenge...");
+                showNotification(
+                    "One last challenge..."
+                );
 
-            await delay(450);
+                await delay(450);
 
-            showLayer("layerFinalGame");
+                showLayer("layerFinalGame");
 
-        });
+            }
+        );
 
     }
 
 
     /* =====================================================
-       10 — FINAL MINI GAME
+       08 — FINAL MINI GAME
     ====================================================== */
 
     const finalGameOptions =
@@ -578,18 +618,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         state.finalGameAnswers = [];
 
+
         finalGameSlots.forEach(slot => {
 
             slot.classList.remove("filled");
 
-            const strong =
+            const label =
                 slot.querySelector("strong");
 
-            if (strong) {
-                strong.textContent = "—";
+            if (label) {
+                label.textContent = "—";
             }
 
         });
+
 
         finalGameOptions.forEach(option => {
 
@@ -606,25 +648,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         finalGameSlots.forEach((slot, index) => {
 
-            const strong =
+            const label =
                 slot.querySelector("strong");
 
-            if (!strong) {
+            if (!label) {
                 return;
             }
 
-            if (state.finalGameAnswers[index]) {
 
-                strong.textContent =
-                    state.finalGameAnswers[index];
+            const answer =
+                state.finalGameAnswers[index];
+
+
+            if (answer) {
+
+                label.textContent = answer;
 
                 slot.classList.add("filled");
 
             } else {
 
-                strong.textContent = "—";
+                label.textContent = "—";
 
                 slot.classList.remove("filled");
+
             }
 
         });
@@ -632,7 +679,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    async function completeFinalGame() {
+    async function checkFinalGame() {
 
         const correctSequence = [
             "HTML",
@@ -640,7 +687,8 @@ document.addEventListener("DOMContentLoaded", () => {
             "JavaScript"
         ];
 
-        const isCorrect =
+
+        const correct =
             state.finalGameAnswers.length === 3 &&
             state.finalGameAnswers.every(
                 (answer, index) =>
@@ -648,14 +696,18 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
 
-        if (!isCorrect) {
+        if (!correct) {
 
             if (finalGameFeedback) {
+
                 finalGameFeedback.textContent =
                     "Close. Think about structure, styling and behaviour.";
+
             }
 
-            showNotification("Try that order again.");
+            showNotification(
+                "Try that order again."
+            );
 
             await delay(700);
 
@@ -665,20 +717,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
+        /* Correct final challenge */
+
         state.finalGameComplete = true;
+
 
         finalGameOptions.forEach(option => {
             option.disabled = true;
         });
 
+
         if (finalGameFeedback) {
+
             finalGameFeedback.textContent =
                 "That's it. You're ready.";
+
         }
 
-        showNotification("That's it. You're ready. ✓");
 
-        await delay(1200);
+        showNotification(
+            "Challenge complete ✓"
+        );
+
+
+        await delay(1000);
 
         showLayer("layerFinal");
 
@@ -695,18 +757,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+
             const language =
                 option.dataset.language;
+
 
             if (!language) {
                 return;
             }
+
 
             if (
                 state.finalGameAnswers.includes(language)
             ) {
                 return;
             }
+
 
             state.finalGameAnswers.push(language);
 
@@ -721,13 +787,44 @@ document.addEventListener("DOMContentLoaded", () => {
                 state.finalGameAnswers.length === 3
             ) {
 
-                await completeFinalGame();
+                await checkFinalGame();
 
             }
 
         });
 
     });
+
+
+    /* =====================================================
+       09 — FINAL SCREEN
+       
+       IMPORTANT:
+       RSVP is a normal mailto link.
+
+       JavaScript DOES NOT intercept it.
+
+       The email is the final step.
+    ====================================================== */
+
+    const rsvpButton =
+        $("#rsvpButton");
+
+
+    if (rsvpButton) {
+
+        rsvpButton.addEventListener(
+            "click",
+            () => {
+
+                showNotification(
+                    "Opening your email app..."
+                );
+
+            }
+        );
+
+    }
 
 
     /* =====================================================
@@ -739,41 +836,56 @@ document.addEventListener("DOMContentLoaded", () => {
         const celebrationLayer =
             $("#celebrationLayer");
 
+
         if (!celebrationLayer) {
             return;
         }
 
+
         celebrationLayer.innerHTML = "";
+
 
         const particleCount = 35;
 
-        for (let i = 0; i < particleCount; i++) {
+
+        for (
+            let i = 0;
+            i < particleCount;
+            i++
+        ) {
 
             const particle =
                 document.createElement("span");
 
+
             particle.className =
                 "celebration-particle";
+
 
             particle.style.left =
                 `${Math.random() * 100}%`;
 
+
             particle.style.top =
                 `${Math.random() * 15}%`;
+
 
             particle.style.setProperty(
                 "--x",
                 `${(Math.random() - 0.5) * 300}px`
             );
 
+
             particle.style.animationDelay =
                 `${Math.random() * 0.8}s`;
+
 
             celebrationLayer.appendChild(
                 particle
             );
 
         }
+
 
         setTimeout(() => {
 
@@ -788,51 +900,65 @@ document.addEventListener("DOMContentLoaded", () => {
        BUTTON PRESS EFFECT
     ====================================================== */
 
-    document.addEventListener("click", event => {
+    document.addEventListener(
+        "click",
+        event => {
 
-        const button =
-            event.target.closest(
-                "button:not(:disabled), a"
-            );
+            const button =
+                event.target.closest(
+                    "button:not(:disabled), a"
+                );
 
-        if (!button) {
-            return;
-        }
 
-        button.classList.add("button-pressed");
+            if (!button) {
+                return;
+            }
 
-        setTimeout(() => {
 
-            button.classList.remove(
+            button.classList.add(
                 "button-pressed"
             );
 
-        }, 180);
 
-    });
+            setTimeout(() => {
+
+                button.classList.remove(
+                    "button-pressed"
+                );
+
+            }, 180);
+
+        }
+    );
 
 
     /* =====================================================
        ESCAPE — CLOSE NOTIFICATION
     ====================================================== */
 
-    document.addEventListener("keydown", event => {
+    document.addEventListener(
+        "keydown",
+        event => {
 
-        if (event.key === "Escape") {
+            if (event.key === "Escape") {
 
-            if (notification) {
-                notification.classList.remove("show");
+                if (notification) {
+                    notification.classList.remove("show");
+                }
+
             }
 
         }
-
-    });
+    );
 
 
     /* =====================================================
-       PUBLIC DEBUG API
+       DEBUG ACCESS
        
-       Useful while testing in the browser console.
+       Available in browser console:
+       
+       PortfolioTrainingInvitation.state
+       PortfolioTrainingInvitation.showLayer(...)
     ====================================================== */
 
     window.PortfolioTrainingInvitation = {
@@ -843,17 +969,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         resetSequence,
 
-        resetFinalGame,
-
-        openCurrentLayer: () => {
-            showLayer(state.currentLayer);
-        }
+        resetFinalGame
 
     };
 
 
     /* =====================================================
-       INITIAL STATE
+       INITIAL SCREEN
     ====================================================== */
 
     showLayer("layerWelcome");
