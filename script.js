@@ -1,41 +1,24 @@
 /* =========================================================
-   MONARCHAUREX — LIHLE PRIVATE INVITATION
-   Interactive experience controller
+   PORTFOLIO WEB DEVELOPMENT TRAINING
+   Interactive Invitation
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    "use strict";
-
 
     /* =====================================================
        STATE
     ====================================================== */
 
     const state = {
-        currentLayer: "layerArrival",
+        currentLayer: "layerWelcome",
 
         challengeOneComplete: false,
-        challengeTwoComplete: false,
-        challengeThreeComplete: false,
+        sequenceComplete: false,
+        oneLinkComplete: false,
+        finalGameComplete: false,
 
-        invitationReached: false,
-        attendanceConfirmed: false,
-
-        happiness: 42,
-        happinessComplete: false,
-
-        smileConfirmed: false,
-
-        energyScore: 0,
-        energyComplete: false,
-
-        vibeAnswered: false,
-
-        verificationRunning: false,
-        approved: false,
-
-        soundEnabled: false
+        sequenceAnswers: [],
+        finalGameAnswers: []
     };
 
 
@@ -45,14 +28,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const $ = (selector) => document.querySelector(selector);
 
-    const $$ = (selector) => {
-        return Array.from(document.querySelectorAll(selector));
-    };
+    const $$ = (selector) => document.querySelectorAll(selector);
 
 
-    function showNotification(message) {
-        const notification = $("#systemNotification");
-        const notificationMessage = $("#notificationMessage");
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+
+    /* =====================================================
+       LAYERS
+    ====================================================== */
+
+    const layers = $$(".experience-layer");
+
+
+    function showLayer(layerId) {
+
+        layers.forEach(layer => {
+            layer.classList.remove("active");
+        });
+
+        const targetLayer = document.getElementById(layerId);
+
+        if (!targetLayer) {
+            console.warn(`Layer not found: ${layerId}`);
+            return;
+        }
+
+        targetLayer.classList.add("active");
+
+        state.currentLayer = layerId;
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    /* =====================================================
+       NOTIFICATIONS
+    ====================================================== */
+
+    const notification = $("#systemNotification");
+    const notificationMessage = $("#notificationMessage");
+
+    let notificationTimer;
+
+
+    function showNotification(message, duration = 2200) {
 
         if (!notification || !notificationMessage) {
             return;
@@ -62,881 +87,647 @@ document.addEventListener("DOMContentLoaded", () => {
 
         notification.classList.add("show");
 
-        clearTimeout(showNotification.timeout);
+        clearTimeout(notificationTimer);
 
-        showNotification.timeout = setTimeout(() => {
+        notificationTimer = setTimeout(() => {
             notification.classList.remove("show");
-        }, 2800);
-    }
-
-
-    function delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        }, duration);
     }
 
 
     /* =====================================================
-       LAYER SYSTEM
+       01 — WELCOME
     ====================================================== */
 
-    const layers = $$(".experience-layer");
+    const enterInvitation = $("#enterInvitation");
 
+    if (enterInvitation) {
 
-    function showLayer(layerId) {
+        enterInvitation.addEventListener("click", async () => {
 
-        const nextLayer = document.getElementById(layerId);
+            enterInvitation.disabled = true;
 
-        if (!nextLayer) {
-            console.warn(`Layer not found: ${layerId}`);
-            return;
-        }
+            showNotification("Let's start with something simple.");
 
-        layers.forEach(layer => {
-            layer.classList.remove("active", "exit");
+            await delay(500);
+
+            showLayer("layerChallengeOne");
+
+            enterInvitation.disabled = false;
         });
 
-        nextLayer.classList.add("active");
-
-        state.currentLayer = layerId;
-
-        updateProgress();
-    }
-
-
-    function updateProgress() {
-
-        const progressSteps = $$(".progress-step");
-
-        if (!progressSteps.length) {
-            return;
-        }
-
-        const order = [
-            "arrival",
-            "challenge-one",
-            "challenge-two",
-            "challenge-three",
-            "access-granted",
-            "fake-invitation",
-            "programme",
-            "wait",
-            "happiness",
-            "smile",
-            "energy",
-            "important-question",
-            "final-verification",
-            "approved",
-            "welcome"
-        ];
-
-        const current = document
-            .getElementById(state.currentLayer)
-            ?.dataset.layer;
-
-        const currentIndex = order.indexOf(current);
-
-        progressSteps.forEach((step, index) => {
-
-            step.classList.remove("active", "complete");
-
-            if (index < currentIndex) {
-                step.classList.add("complete");
-            }
-
-            if (index === currentIndex) {
-                step.classList.add("active");
-            }
-        });
     }
 
 
     /* =====================================================
-       ARRIVAL
+       02 — QUICK WEB CHALLENGE
     ====================================================== */
 
-    function setupArrival() {
+    const challengeOneOptions = $$("#challengeOneOptions .answer-option");
+    const challengeOneFeedback = $("#challengeOneFeedback");
 
-        const button = $("#enterInvitation");
 
-        if (!button) {
-            return;
-        }
+    challengeOneOptions.forEach(option => {
 
-        button.addEventListener("click", () => {
+        option.addEventListener("click", async () => {
 
-            showNotification("PRIVATE ACCESS INITIATED");
-
-            setTimeout(() => {
-                showLayer("layerChallengeOne");
-            }, 650);
-
-        });
-    }
-
-
-    /* =====================================================
-       CHALLENGE SYSTEM
-    ====================================================== */
-
-    function setupChallenges() {
-
-        const challengeOne = $("#layerChallengeOne");
-        const challengeTwo = $("#layerChallengeTwo");
-        const challengeThree = $("#layerChallengeThree");
-
-
-        /* -------------------------------------------------
-           CHALLENGE 1
-        -------------------------------------------------- */
-
-        if (challengeOne) {
-
-            challengeOne
-                .querySelectorAll(".answer-option")
-                .forEach(option => {
-
-                    option.addEventListener("click", () => {
-
-                        handleChallenge(
-                            option,
-                            $("#challengeOneFeedback"),
-                            1
-                        );
-
-                    });
-
-                });
-        }
-
-
-        /* -------------------------------------------------
-           CHALLENGE 2
-        -------------------------------------------------- */
-
-        if (challengeTwo) {
-
-            challengeTwo
-                .querySelectorAll(".answer-option")
-                .forEach(option => {
-
-                    option.addEventListener("click", () => {
-
-                        handleChallenge(
-                            option,
-                            $("#challengeTwoFeedback"),
-                            2
-                        );
-
-                    });
-
-                });
-        }
-
-
-        /* -------------------------------------------------
-           CHALLENGE 3
-        -------------------------------------------------- */
-
-        if (challengeThree) {
-
-            challengeThree
-                .querySelectorAll(".answer-option")
-                .forEach(option => {
-
-                    option.addEventListener("click", () => {
-
-                        handleChallenge(
-                            option,
-                            $("#challengeThreeFeedback"),
-                            3
-                        );
-
-                    });
-
-                });
-        }
-    }
-
-
-    function handleChallenge(option, feedback, challengeNumber) {
-
-        const answer = option.dataset.answer;
-
-        if (!feedback) {
-            return;
-        }
-
-
-        /* Wrong answer */
-
-        if (answer !== "correct") {
-
-            option.classList.add("incorrect");
-
-            feedback.textContent = "Not quite. Try again.";
-
-            showNotification("ACCESS DENIED — TRY AGAIN");
-
-            setTimeout(() => {
-                option.classList.remove("incorrect");
-            }, 700);
-
-            return;
-        }
-
-
-        /* Correct answer */
-
-        option.classList.add("correct");
-
-        feedback.textContent = "Correct. ✓";
-
-        showNotification("ANSWER VERIFIED ✓");
-
-
-        if (challengeNumber === 1) {
-            state.challengeOneComplete = true;
-        }
-
-        if (challengeNumber === 2) {
-            state.challengeTwoComplete = true;
-        }
-
-        if (challengeNumber === 3) {
-            state.challengeThreeComplete = true;
-        }
-
-
-        setTimeout(() => {
-
-            option.classList.remove("correct");
-
-            if (challengeNumber === 1) {
-                showLayer("layerChallengeTwo");
-            }
-
-            if (challengeNumber === 2) {
-                showLayer("layerChallengeThree");
-            }
-
-            if (challengeNumber === 3) {
-                showLayer("layerAccessGranted");
-            }
-
-        }, 900);
-    }
-
-
-    /* =====================================================
-       ACCESS GRANTED
-    ====================================================== */
-
-    function setupAccessGranted() {
-
-        const button = $("#continueToInvitation");
-
-        if (!button) {
-            return;
-        }
-
-        button.addEventListener("click", () => {
-
-            if (
-                !state.challengeOneComplete ||
-                !state.challengeTwoComplete ||
-                !state.challengeThreeComplete
-            ) {
-                showNotification("COMPLETE ALL CHALLENGES FIRST");
+            if (state.challengeOneComplete) {
                 return;
             }
 
-            state.invitationReached = true;
-
-            showLayer("layerFakeInvitation");
-
-        });
-    }
+            const answer = option.dataset.answer;
 
 
-    /* =====================================================
-       FAKE INVITATION
-    ====================================================== */
+            /* Wrong answer */
 
-    function setupFakeInvitation() {
+            if (answer !== "correct") {
 
-        const button = $("#viewProgramme");
+                option.classList.remove("wrong");
 
-        if (!button) {
-            return;
-        }
+                void option.offsetWidth;
 
-        button.addEventListener("click", () => {
+                option.classList.add("wrong");
 
-            showLayer("layerProgramme");
-
-        });
-    }
-
-
-    /* =====================================================
-       PROGRAMME
-    ====================================================== */
-
-    function setupProgramme() {
-
-        const button = $("#confirmAttendance");
-
-        if (!button) {
-            return;
-        }
-
-        button.addEventListener("click", () => {
-
-            state.attendanceConfirmed = true;
-
-            showNotification("ATTENDANCE RECEIVED ✓");
-
-            setTimeout(() => {
-                showLayer("layerWait");
-            }, 500);
-
-        });
-    }
-
-
-    /* =====================================================
-       WAIT / FUN VERIFICATION
-    ====================================================== */
-
-    function setupWait() {
-
-        const button = $("#startFunVerification");
-
-        if (!button) {
-            return;
-        }
-
-        button.addEventListener("click", () => {
-
-            showLayer("layerHappiness");
-
-            updateHappiness();
-
-        });
-    }
-
-
-    /* =====================================================
-       HAPPINESS
-    ====================================================== */
-
-    function setupHappiness() {
-
-        const slider = $("#happinessSlider");
-        const value = $("#happinessValue");
-        const fill = $("#meterFill");
-        const feedback = $("#happinessFeedback");
-        const continueButton = $("#happinessContinue");
-
-
-        if (!slider) {
-            return;
-        }
-
-
-        slider.addEventListener("input", () => {
-
-            const happiness = Number(slider.value);
-
-            state.happiness = happiness;
-
-            if (value) {
-                value.textContent = `${happiness}%`;
-            }
-
-            updateHappiness();
-
-
-            if (happiness >= 70) {
-
-                state.happinessComplete = true;
-
-                if (feedback) {
-                    feedback.textContent = "Hmm... better. But we're still not convinced.";
+                if (challengeOneFeedback) {
+                    challengeOneFeedback.textContent =
+                        "Not quite. Try again.";
                 }
 
-                if (continueButton) {
-                    continueButton.disabled = false;
-                    continueButton.classList.remove("disabled-button");
+                showNotification("Almost. Try again.");
+
+                return;
+            }
+
+
+            /* Correct answer */
+
+            state.challengeOneComplete = true;
+
+            option.classList.add("correct");
+
+            challengeOneOptions.forEach(button => {
+                button.disabled = true;
+            });
+
+            if (challengeOneFeedback) {
+                challengeOneFeedback.textContent =
+                    "Correct. HTML gives the page its structure.";
+            }
+
+            showNotification("Correct ✓");
+
+            await delay(900);
+
+            showLayer("layerChallengeTwo");
+        });
+
+    });
+
+
+    /* =====================================================
+       03 — BUILD THE PAGE
+    ====================================================== */
+
+    const sequenceOptions = $$(".sequence-option");
+    const sequenceSlots = $$("#sequenceSlots .sequence-slot");
+    const sequenceFeedback = $("#challengeTwoFeedback");
+    const continueAfterSequence = $("#continueAfterSequence");
+
+
+    function resetSequence() {
+
+        state.sequenceAnswers = [];
+
+        sequenceSlots.forEach(slot => {
+
+            slot.classList.remove("filled");
+
+            const strong = slot.querySelector("strong");
+
+            if (strong) {
+                strong.textContent = "Choose one";
+            }
+
+        });
+
+        sequenceOptions.forEach(option => {
+
+            option.classList.remove("selected");
+            option.disabled = false;
+
+        });
+
+        if (continueAfterSequence) {
+            continueAfterSequence.classList.add("hidden");
+        }
+    }
+
+
+    function updateSequenceSlots() {
+
+        sequenceSlots.forEach((slot, index) => {
+
+            const strong = slot.querySelector("strong");
+
+            if (!strong) {
+                return;
+            }
+
+            if (state.sequenceAnswers[index]) {
+
+                strong.textContent =
+                    state.sequenceAnswers[index];
+
+                slot.classList.add("filled");
+
+            } else {
+
+                strong.textContent = "Choose one";
+
+                slot.classList.remove("filled");
+            }
+
+        });
+    }
+
+
+    async function checkSequence() {
+
+        const correctSequence = [
+            "HTML",
+            "CSS",
+            "JavaScript"
+        ];
+
+        const isCorrect =
+            state.sequenceAnswers.length === 3 &&
+            state.sequenceAnswers.every(
+                (answer, index) =>
+                    answer === correctSequence[index]
+            );
+
+
+        if (!isCorrect) {
+
+            if (sequenceFeedback) {
+                sequenceFeedback.textContent =
+                    "Not quite. Think: structure → style → behaviour.";
+            }
+
+            showNotification("That order needs another try.");
+
+            await delay(700);
+
+            resetSequence();
+
+            return;
+        }
+
+
+        /* Correct sequence */
+
+        state.sequenceComplete = true;
+
+        if (sequenceFeedback) {
+            sequenceFeedback.textContent =
+                "Perfect. HTML → CSS → JavaScript.";
+        }
+
+        showNotification("Sequence complete ✓");
+
+        sequenceOptions.forEach(option => {
+            option.disabled = true;
+        });
+
+        if (continueAfterSequence) {
+            continueAfterSequence.classList.remove("hidden");
+        }
+
+    }
+
+
+    sequenceOptions.forEach(option => {
+
+        option.addEventListener("click", async () => {
+
+            if (state.sequenceComplete) {
+                return;
+            }
+
+            const language = option.dataset.language;
+
+            if (!language) {
+                return;
+            }
+
+
+            /* Prevent duplicate selection */
+
+            if (state.sequenceAnswers.includes(language)) {
+                return;
+            }
+
+
+            /* Add answer */
+
+            state.sequenceAnswers.push(language);
+
+            option.classList.add("selected");
+
+            option.disabled = true;
+
+            updateSequenceSlots();
+
+
+            /* Check once three answers are selected */
+
+            if (state.sequenceAnswers.length === 3) {
+                await checkSequence();
+            }
+
+        });
+
+    });
+
+
+    if (continueAfterSequence) {
+
+        continueAfterSequence.addEventListener("click", async () => {
+
+            if (!state.sequenceComplete) {
+                return;
+            }
+
+            showNotification("Now let's talk about ONE LINK.");
+
+            await delay(450);
+
+            showLayer("layerOneLink");
+
+        });
+
+    }
+
+
+    /* =====================================================
+       04 — ONE LINK
+    ====================================================== */
+
+    const oneLinkChoices = $$("#oneLinkChoices .choice-card");
+    const oneLinkFeedback = $("#oneLinkFeedback");
+
+
+    oneLinkChoices.forEach(choice => {
+
+        choice.addEventListener("click", async () => {
+
+            if (state.oneLinkComplete) {
+                return;
+            }
+
+            const selectedChoice = choice.dataset.choice;
+
+            state.oneLinkComplete = true;
+
+            oneLinkChoices.forEach(card => {
+                card.disabled = true;
+            });
+
+            choice.classList.add("selected");
+
+
+            if (selectedChoice === "yes") {
+
+                if (oneLinkFeedback) {
+                    oneLinkFeedback.textContent =
+                        "Exactly. One link can bring your professional identity together.";
+                }
+
+            } else if (selectedChoice === "maybe") {
+
+                if (oneLinkFeedback) {
+                    oneLinkFeedback.textContent =
+                        "Fair enough. That's exactly what the training is about.";
                 }
 
             } else {
 
-                state.happinessComplete = false;
-
-                if (feedback) {
-                    feedback.textContent = "Increase your happiness level.";
-                }
-
-                if (continueButton) {
-                    continueButton.disabled = true;
-                    continueButton.classList.add("disabled-button");
-                }
-            }
-
-        });
-
-
-        if (continueButton) {
-
-            continueButton.addEventListener("click", () => {
-
-                if (!state.happinessComplete) {
-                    return;
-                }
-
-                showLayer("layerSmile");
-
-            });
-        }
-
-
-        updateHappiness();
-    }
-
-
-    function updateHappiness() {
-
-        const slider = $("#happinessSlider");
-        const value = $("#happinessValue");
-        const fill = $("#meterFill");
-
-        if (!slider) {
-            return;
-        }
-
-        const happiness = Number(slider.value);
-
-        if (value) {
-            value.textContent = `${happiness}%`;
-        }
-
-        if (fill) {
-
-            const minimum = Number(slider.min);
-            const maximum = Number(slider.max);
-
-            const percentage =
-                ((happiness - minimum) / (maximum - minimum)) * 100;
-
-            fill.style.width = `${percentage}%`;
-        }
-    }
-
-
-    /* =====================================================
-       SMILE
-    ====================================================== */
-
-    function setupSmile() {
-
-        const button = $("#smileButton");
-        const feedback = $("#smileFeedback");
-
-        if (!button) {
-            return;
-        }
-
-        button.addEventListener("click", () => {
-
-            state.smileConfirmed = true;
-
-            if (feedback) {
-                feedback.textContent =
-                    "📸 Smile detected. ...probably. We'll trust you. 😂";
-            }
-
-            showNotification("SMILE DETECTED ✓");
-
-            button.disabled = true;
-
-            setTimeout(() => {
-
-                button.disabled = false;
-
-                showLayer("layerEnergy");
-
-                resetEnergyGame();
-
-            }, 1300);
-
-        });
-    }
-
-
-    /* =====================================================
-       ENERGY GAME
-    ====================================================== */
-
-    const energyMessages = [
-        "✦ Nice.",
-        "✦ Okayyy.",
-        "✦ You're getting serious.",
-        "✦ THERE WE GO.",
-        "✦ ENERGY CONFIRMED 🔥"
-    ];
-
-
-    function setupEnergy() {
-
-        const emblem = $("#movingEmblem");
-
-        if (!emblem) {
-            return;
-        }
-
-        emblem.addEventListener("click", () => {
-
-            if (state.energyComplete) {
-                return;
-            }
-
-            state.energyScore++;
-
-            updateEnergyScore();
-
-            const message =
-                energyMessages[state.energyScore - 1] || "✦ Nice.";
-
-            const feedback = $("#energyFeedback");
-
-            if (feedback) {
-                feedback.textContent = message;
-            }
-
-            if (state.energyScore >= 5) {
-
-                state.energyComplete = true;
-
-                emblem.disabled = true;
-
-                showNotification("ENERGY CONFIRMED 🔥");
-
-                setTimeout(() => {
-
-                    showLayer("layerImportantQuestion");
-
-                }, 1000);
-
-                return;
-            }
-
-            moveEnergyEmblem();
-
-        });
-
-
-        window.addEventListener("resize", () => {
-
-            if (
-                state.currentLayer === "layerEnergy" &&
-                !state.energyComplete
-            ) {
-                moveEnergyEmblem();
-            }
-
-        });
-    }
-
-
-    function resetEnergyGame() {
-
-        state.energyScore = 0;
-        state.energyComplete = false;
-
-        updateEnergyScore();
-
-        const emblem = $("#movingEmblem");
-        const feedback = $("#energyFeedback");
-
-        if (emblem) {
-            emblem.disabled = false;
-        }
-
-        if (feedback) {
-            feedback.textContent = "Catch it.";
-        }
-
-        setTimeout(() => {
-            moveEnergyEmblem();
-        }, 200);
-    }
-
-
-    function updateEnergyScore() {
-
-        const score = $("#energyScore");
-
-        if (!score) {
-            return;
-        }
-
-        score.textContent = `${state.energyScore} / 5`;
-    }
-
-
-    function moveEnergyEmblem() {
-
-        const arena = $("#energyArena");
-        const emblem = $("#movingEmblem");
-
-        if (!arena || !emblem) {
-            return;
-        }
-
-        const arenaWidth = arena.clientWidth;
-        const arenaHeight = arena.clientHeight;
-
-        const emblemWidth = emblem.offsetWidth;
-        const emblemHeight = emblem.offsetHeight;
-
-        if (
-            arenaWidth <= emblemWidth ||
-            arenaHeight <= emblemHeight
-        ) {
-            return;
-        }
-
-        const padding = 15;
-
-        const maxX =
-            arenaWidth - emblemWidth - padding;
-
-        const maxY =
-            arenaHeight - emblemHeight - padding;
-
-        const x =
-            padding +
-            Math.random() * Math.max(0, maxX - padding);
-
-        const y =
-            padding +
-            Math.random() * Math.max(0, maxY - padding);
-
-        emblem.style.left = `${x}px`;
-        emblem.style.top = `${y}px`;
-    }
-
-
-    /* =====================================================
-       IMPORTANT QUESTION
-    ====================================================== */
-
-    function setupVibeQuestion() {
-
-        const options = $$(".vibe-option");
-        const feedback = $("#vibeFeedback");
-
-        options.forEach(option => {
-
-            option.addEventListener("click", () => {
-
-                const answer = option.dataset.answer;
-
-                state.vibeAnswered = true;
-
-                options.forEach(item => {
-                    item.classList.remove("selected");
-                });
-
-                option.classList.add("selected");
-
-
-                if (answer === "all") {
-
-                    if (feedback) {
-                        feedback.textContent =
-                            "CORRECT. Finally, someone understands the assignment. 😂";
-                    }
-
-                    showNotification("CORRECT ANSWER ✓");
-
-                } else if (answer === "snacks") {
-
-                    if (feedback) {
-                        feedback.textContent =
-                            "Honestly... respectable. 🍕";
-                    }
-
-                    showNotification("SNACKS ACCEPTED");
-
-                } else if (answer === "energy") {
-
-                    if (feedback) {
-                        feedback.textContent =
-                            "Good answer. We expected nothing less. 🔥";
-                    }
-
-                    showNotification("ENERGY ACCEPTED");
-
-                } else {
-
-                    if (feedback) {
-                        feedback.textContent =
-                            "Good vibes are always welcome. ✨";
-                    }
-
-                    showNotification("VIBES ACCEPTED");
-                }
-
-
-                setTimeout(() => {
-
-                    showLayer("layerFinalVerification");
-
-                    runFinalVerification();
-
-                }, 1100);
-
-            });
-
-        });
-    }
-
-
-    /* =====================================================
-       FINAL VERIFICATION
-    ====================================================== */
-
-    async function runFinalVerification() {
-
-        if (state.verificationRunning) {
-            return;
-        }
-
-        state.verificationRunning = true;
-
-
-        const checks = [
-            {
-                element: $("#verifyIdentity"),
-                valid: true
-            },
-            {
-                element: $("#verifyInvitation"),
-                valid: state.attendanceConfirmed
-            },
-            {
-                element: $("#verifyEnergy"),
-                valid: state.energyComplete
-            },
-            {
-                element: $("#verifyHappiness"),
-                valid: state.happinessComplete
-            },
-            {
-                element: $("#verifyVibes"),
-                valid: state.vibeAnswered
-            },
-            {
-                element: $("#verifyCommitment"),
-                valid: state.challengeOneComplete &&
-                    state.challengeTwoComplete &&
-                    state.challengeThreeComplete
-            }
-        ];
-
-
-        const status = $("#verificationStatus");
-
-
-        if (status) {
-            status.textContent = "VERIFYING...";
-        }
-
-
-        for (const check of checks) {
-
-            if (check.element) {
-                check.element.textContent = "CHECKING...";
-            }
-
-            await delay(550);
-
-            if (check.element) {
-
-                if (check.valid) {
-
-                    check.element.textContent = "VERIFIED ✓";
-                    check.element.classList.add("verified");
-
-                } else {
-
-                    check.element.textContent = "FAILED";
-                    check.element.classList.add("failed");
-
+                if (oneLinkFeedback) {
+                    oneLinkFeedback.textContent =
+                        "Good. Let's show you where we're going with it.";
                 }
 
             }
-        }
 
-
-        await delay(700);
-
-
-        if (checks.every(check => check.valid)) {
-
-            if (status) {
-                status.textContent = "STATUS: APPROVED";
-                status.classList.add("approved");
-            }
-
-            state.approved = true;
-
-            showNotification("FINAL VERIFICATION COMPLETE ✓");
+            showNotification("Good choice.");
 
             await delay(1200);
 
-            showLayer("layerApproved");
+            showLayer("layerAccessGranted");
 
-            createCelebration();
+        });
 
-        } else {
+    });
 
-            if (status) {
-                status.textContent = "STATUS: VERIFICATION FAILED";
-            }
 
-            showNotification("VERIFICATION FAILED");
+    /* =====================================================
+       05 — ACCESS GRANTED
+    ====================================================== */
 
-            state.verificationRunning = false;
-        }
+    const viewInvitation = $("#viewInvitation");
+
+
+    if (viewInvitation) {
+
+        viewInvitation.addEventListener("click", async () => {
+
+            showNotification("Opening the actual invitation...");
+
+            await delay(450);
+
+            showLayer("layerInvitation");
+
+        });
+
     }
 
 
     /* =====================================================
-       APPROVED
+       06 — ACTUAL INVITATION
     ====================================================== */
 
-    function setupApproved() {
+    const viewDetails = $("#viewDetails");
 
-        const button = $("#welcomeToMonarch");
 
-        if (!button) {
-            return;
-        }
+    if (viewDetails) {
 
-        button.addEventListener("click", () => {
+        viewDetails.addEventListener("click", async () => {
 
-            if (!state.approved) {
-                showNotification("VERIFICATION REQUIRED");
+            showNotification("Here are the details.");
+
+            await delay(400);
+
+            showLayer("layerDetails");
+
+        });
+
+    }
+
+
+    /* =====================================================
+       07 — EVENT DETAILS
+    ====================================================== */
+
+    const goToRsvp = $("#goToRsvp");
+
+
+    if (goToRsvp) {
+
+        goToRsvp.addEventListener("click", async () => {
+
+            showNotification("Your RSVP is one click away.");
+
+            await delay(400);
+
+            showLayer("layerRsvp");
+
+        });
+
+    }
+
+
+    /* =====================================================
+       08 — RSVP
+       
+       IMPORTANT:
+       The actual RSVP button is a mailto link in the HTML.
+
+       JavaScript does NOT submit anything here.
+
+       Clicking it opens the user's email app with:
+       
+       TO:
+       s225014696@mandela.ac.za
+
+       CC:
+       s227264398@mandela.ac.za
+
+       SUBJECT:
+       RSVP – Portfolio Web Development Training
+
+       BODY:
+       Empty
+    ====================================================== */
+
+    const rsvpButton = $("#rsvpButton");
+
+
+    if (rsvpButton) {
+
+        rsvpButton.addEventListener("click", () => {
+
+            showNotification(
+                "Opening your email app..."
+            );
+
+        });
+
+    }
+
+
+    /* =====================================================
+       09 — AFTER RSVP
+       
+       This screen does NOT claim the RSVP was confirmed.
+       The actual confirmation happens when the email is sent.
+    ====================================================== */
+
+    const continueToFinalGame = $("#continueToFinalGame");
+
+
+    if (continueToFinalGame) {
+
+        continueToFinalGame.addEventListener("click", async () => {
+
+            showNotification("One last challenge...");
+
+            await delay(450);
+
+            showLayer("layerFinalGame");
+
+        });
+
+    }
+
+
+    /* =====================================================
+       10 — FINAL MINI GAME
+    ====================================================== */
+
+    const finalGameOptions =
+        $$(".mini-game-option");
+
+    const finalGameSlots =
+        $$("#finalGameSlots .mini-slot");
+
+    const finalGameFeedback =
+        $("#finalGameFeedback");
+
+
+    function resetFinalGame() {
+
+        state.finalGameAnswers = [];
+
+        finalGameSlots.forEach(slot => {
+
+            slot.classList.remove("filled");
+
+            const strong =
+                slot.querySelector("strong");
+
+            if (strong) {
+                strong.textContent = "—";
+            }
+
+        });
+
+        finalGameOptions.forEach(option => {
+
+            option.classList.remove("selected");
+
+            option.disabled = false;
+
+        });
+
+    }
+
+
+    function updateFinalGameSlots() {
+
+        finalGameSlots.forEach((slot, index) => {
+
+            const strong =
+                slot.querySelector("strong");
+
+            if (!strong) {
                 return;
             }
 
-            showLayer("layerWelcome");
+            if (state.finalGameAnswers[index]) {
+
+                strong.textContent =
+                    state.finalGameAnswers[index];
+
+                slot.classList.add("filled");
+
+            } else {
+
+                strong.textContent = "—";
+
+                slot.classList.remove("filled");
+            }
 
         });
+
     }
+
+
+    async function completeFinalGame() {
+
+        const correctSequence = [
+            "HTML",
+            "CSS",
+            "JavaScript"
+        ];
+
+        const isCorrect =
+            state.finalGameAnswers.length === 3 &&
+            state.finalGameAnswers.every(
+                (answer, index) =>
+                    answer === correctSequence[index]
+            );
+
+
+        if (!isCorrect) {
+
+            if (finalGameFeedback) {
+                finalGameFeedback.textContent =
+                    "Close. Think about structure, styling and behaviour.";
+            }
+
+            showNotification("Try that order again.");
+
+            await delay(700);
+
+            resetFinalGame();
+
+            return;
+        }
+
+
+        state.finalGameComplete = true;
+
+        finalGameOptions.forEach(option => {
+            option.disabled = true;
+        });
+
+        if (finalGameFeedback) {
+            finalGameFeedback.textContent =
+                "That's it. You're ready.";
+        }
+
+        showNotification("That's it. You're ready. ✓");
+
+        await delay(1200);
+
+        showLayer("layerFinal");
+
+        createCelebration();
+
+    }
+
+
+    finalGameOptions.forEach(option => {
+
+        option.addEventListener("click", async () => {
+
+            if (state.finalGameComplete) {
+                return;
+            }
+
+            const language =
+                option.dataset.language;
+
+            if (!language) {
+                return;
+            }
+
+            if (
+                state.finalGameAnswers.includes(language)
+            ) {
+                return;
+            }
+
+            state.finalGameAnswers.push(language);
+
+            option.classList.add("selected");
+
+            option.disabled = true;
+
+            updateFinalGameSlots();
+
+
+            if (
+                state.finalGameAnswers.length === 3
+            ) {
+
+                await completeFinalGame();
+
+            }
+
+        });
+
+    });
 
 
     /* =====================================================
@@ -945,200 +736,126 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function createCelebration() {
 
-        const celebration = $("#celebrationLayer");
+        const celebrationLayer =
+            $("#celebrationLayer");
 
-        if (!celebration) {
+        if (!celebrationLayer) {
             return;
         }
 
-        celebration.innerHTML = "";
+        celebrationLayer.innerHTML = "";
 
-        for (let i = 0; i < 35; i++) {
+        const particleCount = 35;
 
-            const particle = document.createElement("span");
+        for (let i = 0; i < particleCount; i++) {
 
-            particle.className = "celebration-particle";
+            const particle =
+                document.createElement("span");
+
+            particle.className =
+                "celebration-particle";
 
             particle.style.left =
                 `${Math.random() * 100}%`;
 
             particle.style.top =
-                `${Math.random() * 100}%`;
-
-            particle.style.animationDelay =
-                `${Math.random() * 1.2}s`;
+                `${Math.random() * 15}%`;
 
             particle.style.setProperty(
                 "--x",
-                `${(Math.random() - 0.5) * 220}px`
+                `${(Math.random() - 0.5) * 300}px`
             );
 
-            particle.style.setProperty(
-                "--y",
-                `${(Math.random() - 0.5) * 220}px`
+            particle.style.animationDelay =
+                `${Math.random() * 0.8}s`;
+
+            celebrationLayer.appendChild(
+                particle
             );
 
-            celebration.appendChild(particle);
         }
 
-        celebration.classList.add("active");
-
         setTimeout(() => {
-            celebration.classList.remove("active");
-        }, 2500);
+
+            celebrationLayer.innerHTML = "";
+
+        }, 3500);
+
     }
 
 
     /* =====================================================
-       SOUND CONTROL
+       BUTTON PRESS EFFECT
     ====================================================== */
 
-    function setupSoundControl() {
+    document.addEventListener("click", event => {
 
-        const button = $("#soundControl");
+        const button =
+            event.target.closest(
+                "button:not(:disabled), a"
+            );
 
         if (!button) {
             return;
         }
 
-        button.addEventListener("click", () => {
+        button.classList.add("button-pressed");
 
-            state.soundEnabled = !state.soundEnabled;
+        setTimeout(() => {
 
-            const icon = button.querySelector(".sound-icon");
-            const label = button.querySelector(".sound-label");
+            button.classList.remove(
+                "button-pressed"
+            );
 
-            if (state.soundEnabled) {
+        }, 180);
 
-                if (icon) {
-                    icon.textContent = "🔊";
-                }
-
-                if (label) {
-                    label.textContent = "SOUND ON";
-                }
-
-                showNotification("SOUND ENABLED");
-
-            } else {
-
-                if (icon) {
-                    icon.textContent = "◉";
-                }
-
-                if (label) {
-                    label.textContent = "SOUND";
-                }
-
-                showNotification("SOUND OFF");
-            }
-
-        });
-    }
+    });
 
 
     /* =====================================================
-       INITIAL VISUAL SETUP
+       ESCAPE — CLOSE NOTIFICATION
     ====================================================== */
 
-    function setupInitialVisuals() {
+    document.addEventListener("keydown", event => {
 
-        const buttons = $$(
-            ".premium-button, .answer-option, .vibe-option"
-        );
+        if (event.key === "Escape") {
 
-        buttons.forEach(button => {
-
-            button.addEventListener("mousedown", () => {
-                button.classList.add("pressed");
-            });
-
-            button.addEventListener("mouseup", () => {
-                button.classList.remove("pressed");
-            });
-
-            button.addEventListener("mouseleave", () => {
-                button.classList.remove("pressed");
-            });
-
-        });
-    }
-
-
-    /* =====================================================
-       KEYBOARD SUPPORT
-    ====================================================== */
-
-    function setupKeyboardSupport() {
-
-        document.addEventListener("keydown", event => {
-
-            if (event.key === "Escape") {
-
-                const notification =
-                    $("#systemNotification");
-
-                if (notification) {
-                    notification.classList.remove("show");
-                }
-
+            if (notification) {
+                notification.classList.remove("show");
             }
 
-        });
-    }
+        }
+
+    });
 
 
     /* =====================================================
        PUBLIC DEBUG API
+       
+       Useful while testing in the browser console.
     ====================================================== */
 
-    window.MonarchAurexInvitation = {
+    window.PortfolioTrainingInvitation = {
 
         state,
 
         showLayer,
 
-        resetEnergyGame,
+        resetSequence,
 
-        runFinalVerification,
+        resetFinalGame,
 
-        createCelebration
+        openCurrentLayer: () => {
+            showLayer(state.currentLayer);
+        }
 
     };
 
 
     /* =====================================================
-       START EXPERIENCE
+       INITIAL STATE
     ====================================================== */
 
-    setupArrival();
-
-    setupChallenges();
-
-    setupAccessGranted();
-
-    setupFakeInvitation();
-
-    setupProgramme();
-
-    setupWait();
-
-    setupHappiness();
-
-    setupSmile();
-
-    setupEnergy();
-
-    setupVibeQuestion();
-
-    setupApproved();
-
-    setupSoundControl();
-
-    setupInitialVisuals();
-
-    setupKeyboardSupport();
-
-    updateProgress();
+    showLayer("layerWelcome");
 
 });
