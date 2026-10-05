@@ -1676,3 +1676,57 @@ h2 {
     }
 
 }
+/* =====================================================
+   MONARCHAUREX DESIGN CREDIT
+====================================================== */
+
+.site-footer {
+    position: fixed;
+    left: 0;
+    bottom: 18px;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 20;
+
+    pointer-events: none;
+}
+
+.site-footer a {
+    pointer-events: auto;
+
+    color: #64748b;
+
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.site-footer a:hover {
+    color: #2563eb;
+    transform: translateY(-1px);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .site-footer {
+        bottom: 12px;
+    }
+
+    .site-footer a {
+        font-size: 0.65rem;
+    }
+
+}
